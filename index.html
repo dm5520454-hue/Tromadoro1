@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Tromadoro - Mazen</title>
+    <meta name="description" content="Tromadoro - التطبيق الرسمي لتنظيم الوقت والمهام من تطوير مازن">
+    <meta name="keywords" content="Tromadoro, مازن, Mazen, تنظيم وقت, Pomodoro, دراسة">
+    <meta name="author" content="Mazen">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #c29b40; --glass: rgba(15, 15, 15, 0.9); --border: rgba(194, 155, 64, 0.4); }
+        body { 
+            background: #050505; background-size: cover; background-attachment: fixed; 
+            background-position: center; color: #e0e0e0; font-family: 'Tajawal', sans-serif; 
+            margin: 0; padding-bottom: 120px; text-align: center; transition: 0.5s; 
+        }
+        body.dark-red { --primary: #ff4b4b; --border: rgba(255, 75, 75, 0.4); }
+        body.dark-blue { --primary: #4b7bff; --border: rgba(75, 123, 255, 0.4); }
+        body.dark-purple { --primary: #a34bff; --border: rgba(163, 75, 255, 0.4); }
+        h1 { font-family: 'Cinzel', serif; color: var(--primary); margin: 20px 0; letter-spacing: 2px; }
+        .glass-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 25px; padding: 20px; margin: 15px auto; max-width: 85%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .total-counter { font-size: 0.85rem; color: var(--primary); margin-bottom: 15px; font-weight: bold; border: 1px solid var(--border); display: inline-block; padding: 5px 15px; border-radius: 50px; }
+        .timer-wrapper { display: flex; justify-content: center; align-items: center; gap: 5px; margin: 15px 0; direction: ltr; }
+        .editable-time { font-size: 5rem; color: var(--primary); font-family: 'Cinzel', monospace; outline: none; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 15px; }
+        .main-btn { background: var(--primary); color: #000; border: none; padding: 18px; border-radius: 15px; font-weight: bold; width: 100%; cursor: pointer; font-size: 1.1rem; }
+        .item-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; margin-bottom: 10px; border-right: 4px solid var(--primary); text-align: right; }
+        .task-text { flex: 1; outline: none; }
+        .check-dot { width: 18px; height: 18px; border: 2px solid var(--primary); border-radius: 50%; cursor: pointer; }
+        .completed { opacity: 0.4; text-decoration: line-through; }
+        .day-box { border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: right; position: relative; }
+        .floating-btn { position: fixed; bottom: 100px; padding: 12px 18px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 0.75rem; z-index: 1000; display: flex; align-items: center; gap: 6px; }
+        .btn-contact { left: 15px; background: #0088cc; color: #fff; box-shadow: 0 0 10px #0088cc; animation: glow-blue 2s infinite; }
+        .btn-group { right: 15px; background: var(--primary); color: #000; box-shadow: 0 0 10px var(--primary); animation: glow-primary 2s infinite; }
+        @keyframes glow-blue { 0%, 100% { box-shadow: 0 0 5px #0088cc; } 50% { box-shadow: 0 0 15px #0088cc; } }
+        @keyframes glow-primary { 0%, 100% { box-shadow: 0 0 5px var(--primary); } 50% { box-shadow: 0 0 15px var(--primary); } }
+        .theme-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; display: inline-block; margin: 5px; }
+        .navbar { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 18px 0; border-top: 1px solid var(--border); z-index: 1001; }
+        .nav-item { color: #444; font-size: 1.6rem; cursor: pointer; }
+        .nav-item.active { color: var(--primary); }
+        .page { display: none; padding: 10px; animation: fadeIn 0.4s; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body onload="loadAll()">
+    <audio id="alarm" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+    
+    <a href="https://t.me/Death6is" target="_blank" class="floating-btn btn-contact">👤 كلم مازن</a>
+    <a href="https://t.me/+R6hvECiujXsyN2U0" target="_blank" class="floating-btn btn-group">🚀 الجروب</a>
+
+    <div id="home" class="page active">
+        <h1>Tromadoro</h1>
+        <div class="glass-card">
+            <div class="total-counter">إجمالي التركيز: <span id="total-minutes">0</span> دقيقة</div>
+            <div class="timer-wrapper">
+                <div id="min-unit" class="editable-time" contenteditable="true">25</div>
+                <div style="font-size: 3.5rem; color: var(--primary);">:</div>
+                <div id="sec-unit" class="editable-time" contenteditable="true">00</div>
+            </div>
+            <button class="main-btn" onclick="startTimer()" id="action-btn">ابدأ الجلسة</button>
+            <button onclick="resetTimer()" style="background:none; border:none; color:gray; margin-top:15px; text-decoration:underline; cursor:pointer">إعادة ضبط</button>
+        </div>
+        <div class="glass-card">
+            <p style="font-size:0.8rem; margin-bottom:12px;">المظهر والخلفية</p>
+            <div class="theme-btn" style="background: #c29b40;" onclick="setTheme('')"></div>
+            <div class="theme-btn" style="background: #ff4b4b;" onclick="setTheme('dark-red')"></div>
+            <div class="theme-btn" style="background: #4b7bff;" onclick="setTheme('dark-blue')"></div>
+            <div class="theme-btn" style="background: #a34bff;" onclick="setTheme('dark-purple')"></div>
+            <br><br>
+            <input type="file" id="bg-upload" hidden accept="image/*" onchange="uploadBg(event)">
+            <button onclick="document.getElementById('bg-upload').click()" style="background:none; border:1px solid var(--primary); color:var(--primary); padding:10px; border-radius:15px; font-size:0.8rem; cursor:pointer; width:100%;">🖼️ صورة من جهازك</button>
+        </div>
+    </div>
+
+    <div id="tasks" class="page">
+        <h1>المهام</h1>
+        <div class="glass-card">
+            <div id="task-list"></div>
+            <div style="display:flex; gap:10px; margin-top:15px">
+                <input type="text" id="task-in" placeholder="أضف مهمة..." style="flex:1; background:none; border:1px solid var(--border); border-radius:10px; color:#fff; padding:10px; outline:none">
+                <button onclick="addTask()" style="background:var(--primary); border:none; border-radius:10px; padding:10px 20px; font-weight:bold">+</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="schedule" class="page">
+        <h1>الجدول</h1>
+        <div class="glass-card" id="schedule-container">
+            <button onclick="addDay()" style="background:none; border:1px dashed var(--primary); color:var(--primary); width:100%; padding:12px; border-radius:12px; margin-bottom:10px;">+ إضافة يوم</button>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-item active" onclick="showP('home', this)">⏳</div>
+        <div class="nav-item" onclick="showP('tasks', this)">✅</div>
+        <div class="nav-item" onclick="showP('schedule', this)">📅</div>
+    </nav>
+
+    <script>
+        let timerInt, isRunning = false, totalSecs = 0, sessionsTotalMinutes = 0, initialMinutes = 0;
+        const alarm = document.getElementById('alarm');
+
+        function saveAll() {
+            localStorage.setItem('tasks', document.getElementById('task-list').innerHTML);
+            localStorage.setItem('schedule', document.getElementById('schedule-container').innerHTML);
+            localStorage.setItem('totalMinutes', sessionsTotalMinutes);
+            localStorage.setItem('theme', document.body.className);
+            localStorage.setItem('customBg', document.body.style.backgroundImage);
+        }
+
+        function loadAll() {
+            if(localStorage.getItem('tasks')) document.getElementById('task-list').innerHTML = localStorage.getItem('tasks');
+            if(localStorage.getItem('schedule')) document.getElementById('schedule-container').innerHTML = localStorage.getItem('schedule');
+            if(localStorage.getItem('theme')) document.body.className = localStorage.getItem('theme');
+            if(localStorage.getItem('customBg')) document.body.style.backgroundImage = localStorage.getItem('customBg');
+            if(localStorage.getItem('totalMinutes')) {
+                sessionsTotalMinutes = parseInt(localStorage.getItem('totalMinutes'));
+                document.getElementById('total-minutes').innerText = sessionsTotalMinutes;
+            }
+        }
+
+        function showP(id, el) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function startTimer() {
+            const mDisp = document.getElementById('min-unit'), sDisp = document.getElementById('sec-unit'), btn = document.getElementById('action-btn');
+            if (!isRunning) {
+                let minsInput = parseInt(mDisp.innerText) || 0;
+                let secsInput = parseInt(sDisp.innerText) || 0;
+                totalSecs = (minsInput * 60) + secsInput;
+                if (totalSecs <= 0) return;
+                initialMinutes = minsInput;
+                isRunning = true; btn.innerText = "توقف";
+                mDisp.contentEditable = sDisp.contentEditable = "false";
+                timerInt = setInterval(() => {
+                    if (totalSecs > 0) {
+                        totalSecs--;
+                        mDisp.innerText = Math.floor(totalSecs / 60);
+                        sDisp.innerText = (totalSecs % 60).toString().padStart(2, '0');
+                    } else {
+                        clearInterval(timerInt); isRunning = false;
+                        sessionsTotalMinutes += initialMinutes;
+                        document.getElementById('total-minutes').innerText = sessionsTotalMinutes;
+                        saveAll(); alarm.play(); alert("عاش يا بطل!"); resetTimer();
+                    }
+                }, 1000);
+            } else { clearInterval(timerInt); isRunning = false; btn.innerText = "استئناف"; }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInt); isRunning = false;
+            document.getElementById('min-unit').innerText = "25"; document.getElementById('sec-unit').innerText = "00";
+            document.getElementById('min-unit').contentEditable = document.getElementById('sec-unit').contentEditable = "true";
+            document.getElementById('action-btn').innerText = "ابدأ الجلسة";
+        }
+
+        function addTask() {
+            const inp = document.getElementById('task-in'), val = inp.value; if (!val) return;
+            const d = document.createElement('div'); d.className = 'item-row';
+            d.innerHTML = `<div class="check-dot" onclick="this.parentElement.classList.toggle('completed'); saveAll()"></div><div class="task-text" contenteditable="true" oninput="saveAll()">${val}</div><div onclick="this.parentElement.remove(); saveAll()" style="color:red; cursor:pointer">×</div>`;
+            document.getElementById('task-list').appendChild(d); inp.value = ""; saveAll();
+        }
+
+        function addDay() {
+            const d = document.createElement('div'); d.className = 'day-box';
+            d.innerHTML = `<div contenteditable="true" oninput="saveAll()" style="color:var(--primary); font-weight:bold">يوم جديد</div><div class="task-text" contenteditable="true" oninput="saveAll()">الخطة...</div><div onclick="this.parentElement.remove(); saveAll()" style="color:red; font-size:0.7rem; cursor:pointer">حذف</div>`;
+            document.getElementById('schedule-container').insertBefore(d, document.getElementById('schedule-container').firstChild); saveAll();
+        }
+
+        function setTheme(cls) { 
+            document.body.className = cls; 
+            document.body.style.backgroundImage = "none";
+            saveAll();
+        }
+
+        function uploadBg(event) {
+            const reader = new FileReader();
+            reader.onload = function() { 
+                document.body.style.backgroundImage = `url(${reader.result})`; 
+                saveAll();
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+</body>
+</html>
