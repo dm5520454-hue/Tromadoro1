@@ -106,7 +106,7 @@
             <div class="theme-btn" style="background: #a34bff;" onclick="setTheme('dark-purple')"></div>
             <input type="color" id="custom-color" oninput="setCustomColor(this.value)" style="display: none;">
             <div class="color-picker" onclick="document.getElementById('custom-color').click()" title="تغيير ألوان التطبيق"></div>
-            <label class="upload-label">🖼️ صورة خلفية ثابتة<input type="file" accept="image/*" onchange="uploadBg(this)" style="display:none"></label>
+            <label class="upload-label">🖼️ صورة خلفية ثابتة<input type="file" id="bg-input" accept="image/*" onchange="uploadBg(this)" style="display:none"></label>
             <button onclick="clearBg()" style="background:none; border:none; color:red; font-size:0.7rem; margin-top:5px; cursor:pointer">إزالة الخلفية</button>
         </div>
     </div>
@@ -197,7 +197,6 @@
             }
         }
 
-        // باقي دوال الجافاسكريبت الأصلية بتاعتك
         const teachersData = {
             'عربي': ["محمد صلاح", "رضا الفاروق", "محمد صفوت (بسطتهالك)", "وليد محسن", "محمد ماهر", "إبراهيم الجوهري", "أحمد إبراهيم", "عبد الله الشهاوي", "إيهاب السكران", "حسن الشيخ", "سعدون الجابر", "طارق فتحي", "عماد حامد", "محمود عبد العزيز", "مصطفى فريد", "هاني الكردي", "ياسر عمارة", "مدرستنا عربي", "اللغة العربية كبسة", "الاستاذ في اللغة"],
             'فيزياء': ["محمد عبد المعبود", "محمود مجدي", "كيرلس ناجي", "حسام خليل", "أحمد أبو عرب", "محمد عنتر", "أحمد بركة", "خالد صقر فيزياء", "إسلام أمان", "أحمد رياض", "تامر القاضي", "زكي حجازي", "شريف الشافعي", "علي رياض", "العبقري في الفيزياء", "فيزياء أونلاين", "الفيزياء الممتعة", "بوابة الفيزياء", "مدرستنا فيزياء", "المهندس في الفيزياء"],
@@ -217,7 +216,6 @@
             localStorage.setItem('totalMinutes', sessionsTotalMinutes);
             localStorage.setItem('theme', document.body.className);
             localStorage.setItem('customColor', getComputedStyle(document.documentElement).getPropertyValue('--primary'));
-            localStorage.setItem('bgImage', document.body.style.backgroundImage);
         }
 
         function loadAll() {
@@ -226,23 +224,57 @@
             if(localStorage.getItem('schedule')) document.getElementById('schedule-container').innerHTML = localStorage.getItem('schedule');
             if(localStorage.getItem('theme')) document.body.className = localStorage.getItem('theme');
             if(localStorage.getItem('customColor')) setCustomColor(localStorage.getItem('customColor'));
-            if(localStorage.getItem('bgImage')) document.body.style.backgroundImage = localStorage.getItem('bgImage');
+            
+            // تحميل الخلفية من IndexedDB
+            loadBg();
+
             if(localStorage.getItem('totalMinutes')) {
                 sessionsTotalMinutes = parseInt(localStorage.getItem('totalMinutes'));
                 document.getElementById('total-minutes').innerText = sessionsTotalMinutes;
             }
         }
 
+        // --- نظام حفظ الخلفية المتطور (IndexedDB) ---
         function uploadBg(input) {
+            const file = input.files[0];
+            if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.body.style.backgroundImage = `url('${e.target.result}')`;
-                saveAll();
+                const imgData = e.target.result;
+                document.body.style.backgroundImage = `url('${imgData}')`;
+                
+                const request = indexedDB.open("TromadoroDB", 1);
+                request.onupgradeneeded = (ev) => ev.target.result.createObjectStore("settings");
+                request.onsuccess = (ev) => {
+                    const db = ev.target.result;
+                    db.transaction("settings", "readwrite").objectStore("settings").put(imgData, "bgImage");
+                };
             };
-            reader.readAsDataURL(input.files[0]);
+            reader.readAsDataURL(file);
         }
 
-        function clearBg() { document.body.style.backgroundImage = 'none'; saveAll(); }
+        function loadBg() {
+            const request = indexedDB.open("TromadoroDB", 1);
+            request.onupgradeneeded = (ev) => ev.target.result.createObjectStore("settings");
+            request.onsuccess = (ev) => {
+                const db = ev.target.result;
+                db.transaction("settings").objectStore("settings").get("bgImage").onsuccess = (e) => {
+                    if (e.target.result) {
+                        document.body.style.backgroundImage = `url('${e.target.result}')`;
+                    }
+                };
+            };
+        }
+
+        function clearBg() { 
+            document.body.style.backgroundImage = 'none'; 
+            const request = indexedDB.open("TromadoroDB", 1);
+            request.onsuccess = (ev) => {
+                const db = ev.target.result;
+                db.transaction("settings", "readwrite").objectStore("settings").delete("bgImage");
+            };
+        }
+        // ------------------------------------------
 
         function setCustomColor(color) {
             document.documentElement.style.setProperty('--primary', color);
