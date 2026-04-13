@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>Tromadoro - Mazen</title>
-    <meta name="theme-color" content="#c29b40">
+    <meta name="theme-color" content="#00ffcc">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2693/2693507.png">
@@ -18,27 +18,38 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #c29b40; --glass: rgba(15, 15, 15, 0.9); --border: rgba(194, 155, 64, 0.4); }
+        :root { 
+            --primary: #00ffcc; 
+            --glass: rgba(15, 15, 15, 0.9); 
+            --border: rgba(0, 255, 204, 0.4); 
+        }
         body { 
             background: #000; color: #e0e0e0; font-family: 'Tajawal', sans-serif; 
             margin: 0; padding-bottom: 120px; text-align: center; transition: 0.5s; 
             background-size: cover; background-position: center; background-attachment: fixed;
         }
 
-        body.dark-red { --primary: #ff4b4b; --border: rgba(255, 75, 75, 0.4); }
-        body.dark-blue { --primary: #4b7bff; --border: rgba(75, 123, 255, 0.4); }
-        body.dark-purple { --primary: #a34bff; --border: rgba(163, 75, 255, 0.4); }
-        h1 { font-family: 'Cinzel', serif; color: var(--primary); margin: 20px 0; letter-spacing: 2px; position: relative; }
+        body.dark-red { --primary: #ff3131; --border: rgba(255, 49, 49, 0.4); }
+        body.dark-blue { --primary: #00d2ff; --border: rgba(0, 210, 255, 0.4); }
+        body.dark-purple { --primary: #bc13fe; --border: rgba(188, 19, 254, 0.4); }
+
+        h1 { font-family: 'Cinzel', serif; color: var(--primary); margin: 20px 0; letter-spacing: 2px; position: relative; text-shadow: 0 0 10px var(--primary); }
         .glass-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 25px; padding: 20px; margin: 15px auto; max-width: 85%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
-        .total-counter { font-size: 0.85rem; color: var(--primary); margin-bottom: 15px; font-weight: bold; border: 1px solid var(--border); display: inline-block; padding: 5px 15px; border-radius: 50px; }
+        .total-counter { font-size: 0.85rem; color: var(--primary); margin-bottom: 15px; font-weight: bold; border: 1px solid var(--border); display: inline-block; padding: 5px 15px; border-radius: 50px; box-shadow: 0 0 5px var(--primary); }
         .timer-wrapper { display: flex; justify-content: center; align-items: center; gap: 5px; margin: 15px 0; direction: ltr; }
-        .editable-time { font-size: 5rem; color: var(--primary); font-family: 'Cinzel', monospace; outline: none; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 15px; }
-        .main-btn { background: var(--primary); color: #000; border: none; padding: 18px; border-radius: 15px; font-weight: bold; width: 100%; cursor: pointer; font-size: 1.1rem; }
+        .editable-time { font-size: 5rem; color: var(--primary); font-family: 'Cinzel', monospace; outline: none; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 15px; text-shadow: 0 0 8px var(--primary); }
+        
+        .main-btn { 
+            background: var(--primary); color: #000; border: none; padding: 18px; 
+            border-radius: 15px; font-weight: bold; width: 100%; cursor: pointer; 
+            font-size: 1.1rem; box-shadow: 0 4px 15px var(--border); transition: 0.3s;
+        }
+        .main-btn:active { transform: scale(0.98); }
         
         .item-row { display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; margin-bottom: 10px; border-right: 4px solid var(--primary); text-align: right; direction: rtl; }
         .task-text { flex: 1; outline: none; text-align: right; min-height: 1.2em; }
         
-        .check-dot { width: 18px; height: 18px; border: 2px solid var(--primary); border-radius: 50%; cursor: pointer; flex-shrink: 0; }
+        .check-dot { width: 18px; height: 18px; border: 2px solid var(--primary); border-radius: 50%; cursor: pointer; flex-shrink: 0; box-shadow: inset 0 0 3px var(--primary); }
         .completed { opacity: 0.4; text-decoration: line-through; }
         .day-box { border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: right; position: relative; direction: rtl; background: rgba(255,255,255,0.02); }
         
@@ -52,7 +63,7 @@
         .theme-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; display: inline-block; margin: 5px; vertical-align: middle; }
         .navbar { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 18px 0; border-top: 1px solid var(--border); z-index: 1001; }
         .nav-item { color: #444; font-size: 1.6rem; cursor: pointer; }
-        .nav-item.active { color: var(--primary); }
+        .nav-item.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
         .page { display: none; padding: 10px; animation: fadeIn 0.4s; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -60,7 +71,8 @@
         .time-label { font-family: 'Cinzel', serif; color: var(--primary); font-weight: bold; min-width: 80px; direction: ltr; border-left: 1px solid var(--border); padding-left: 10px; margin-left: 10px; text-align: right; }
         .time-input { background: none; border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 10px; outline: none; font-family: 'Tajawal'; text-align: right; }
         .subject-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .subject-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 25px 10px; border-radius: 20px; color: #fff; font-weight: bold; cursor: pointer; }
+        .subject-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 25px 10px; border-radius: 20px; color: #fff; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .subject-btn:hover { border-color: var(--primary); box-shadow: 0 0 10px var(--border); }
         
         .teacher-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; margin-bottom: 8px; color: #fff; border-right: 4px solid var(--primary); text-align: right; direction: rtl; }
         .rank-tag { font-size: 0.65rem; color: var(--primary); border: 1px solid var(--primary); padding: 2px 6px; border-radius: 4px; font-weight: bold; }
@@ -81,6 +93,19 @@
 
     <div id="home" class="page active">
         <h1>Tromadoro</h1>
+
+        <div class="glass-card">
+            <p style="font-size:0.9rem; margin-bottom:12px; color: var(--primary); font-weight: bold;">مواقيت الإيمان 🕋</p>
+            <div id="prayer-list">
+                <div class="item-row"><div class="check-dot" onclick="this.parentElement.classList.toggle('completed'); saveAll()"></div><div class="task-text">صليت الفجر</div></div>
+                <div class="item-row"><div class="check-dot" onclick="this.parentElement.classList.toggle('completed'); saveAll()"></div><div class="task-text">صليت الظهر</div></div>
+                <div class="item-row"><div class="check-dot" onclick="this.parentElement.classList.toggle('completed'); saveAll()"></div><div class="task-text">صليت العصر</div></div>
+                <div class="item-row"><div class="check-dot" onclick="this.parentElement.classList.toggle('completed'); saveAll()"></div><div class="task-text">صليت المغرب</div></div>
+                <div class="item-row"><div class="check-dot" onclick="this.parentElement.classList.toggle('completed'); saveAll()"></div><div class="task-text">صليت العشاء</div></div>
+                <div class="item-row"><div class="check-dot" onclick="this.parentElement.classList.toggle('completed'); saveAll()"></div><div class="task-text">قيام الليل</div></div>
+            </div>
+        </div>
+
         <div class="glass-card">
             <div class="total-counter">إجمالي التركيز: <span id="total-minutes">0</span> دقيقة</div>
             <div class="timer-wrapper">
@@ -100,14 +125,32 @@
 
         <div class="glass-card">
             <p style="font-size:0.8rem; margin-bottom:12px;">المظهر والتخصيص 🎨</p>
-            <div class="theme-btn" style="background: #c29b40;" onclick="setTheme('')"></div>
-            <div class="theme-btn" style="background: #ff4b4b;" onclick="setTheme('dark-red')"></div>
-            <div class="theme-btn" style="background: #4b7bff;" onclick="setTheme('dark-blue')"></div>
-            <div class="theme-btn" style="background: #a34bff;" onclick="setTheme('dark-purple')"></div>
+            <div class="theme-btn" style="background: #00ffcc;" onclick="setTheme('')"></div>
+            <div class="theme-btn" style="background: #ff3131;" onclick="setTheme('dark-red')"></div>
+            <div class="theme-btn" style="background: #00d2ff;" onclick="setTheme('dark-blue')"></div>
+            <div class="theme-btn" style="background: #bc13fe;" onclick="setTheme('dark-purple')"></div>
             <input type="color" id="custom-color" oninput="setCustomColor(this.value)" style="display: none;">
             <div class="color-picker" onclick="document.getElementById('custom-color').click()" title="تغيير ألوان التطبيق"></div>
             <label class="upload-label">🖼️ صورة خلفية ثابتة<input type="file" id="bg-input" accept="image/*" onchange="uploadBg(this)" style="display:none"></label>
             <button onclick="clearBg()" style="background:none; border:none; color:red; font-size:0.7rem; margin-top:5px; cursor:pointer">إزالة الخلفية</button>
+        </div>
+
+        <p style="font-size: 0.8rem; color: var(--primary); margin-top: 20px; opacity: 0.8;">
+            خليتهالك ف الاول علشان اول م تفتح التطبيق تفتكر الصلاه🧐 مازن بقا😎😎😎
+        </p>
+    </div>
+
+    <div id="stopwatch-page" class="page">
+        <h1>السباق 🏁</h1>
+        <div class="glass-card">
+            <p style="color: #888; font-size: 0.8rem; margin-bottom: 10px;">احسب وقتك بالثانية</p>
+            <div class="timer-wrapper">
+                <div id="sw-min" class="editable-time">00</div>
+                <div style="font-size: 3.5rem; color: var(--primary);">:</div>
+                <div id="sw-sec" class="editable-time">00</div>
+            </div>
+            <button class="main-btn" onclick="toggleStopwatch()" id="sw-btn">ابدأ العداد</button>
+            <button onclick="resetStopwatch()" style="background:none; border:none; color:gray; margin-top:15px; text-decoration:underline; cursor:pointer">تصفير العداد</button>
         </div>
     </div>
 
@@ -165,6 +208,7 @@
 
     <nav class="navbar">
         <div class="nav-item active" onclick="showP('home', this)">⏳</div>
+        <div class="nav-item" onclick="showP('stopwatch-page', this)">🏁</div>
         <div class="nav-item" onclick="showP('tasks', this)">✅</div>
         <div class="nav-item" onclick="showP('time-block', this)">⏱️</div>
         <div class="nav-item" onclick="showP('schedule', this)">📅</div>
@@ -172,7 +216,6 @@
     </nav>
 
     <script>
-        // دالة تفعيل ميزات التطبيق (PWA)
         function initPWA() {
             const manifest = {
                 "name": "Tromadoro Mazen",
@@ -180,7 +223,7 @@
                 "start_url": ".",
                 "display": "standalone",
                 "background_color": "#000000",
-                "theme_color": "#c29b40",
+                "theme_color": "#00ffcc",
                 "icons": [{
                     "src": "https://cdn-icons-png.flaticon.com/512/2693/2693507.png",
                     "sizes": "512x512",
@@ -207,34 +250,49 @@
         };
 
         let timerInt, isRunning = false, totalSecs = 0, sessionsTotalMinutes = 0, initialMinutes = 0;
+        let swInt, swRunning = false, swSecs = 0;
         const alarm = document.getElementById('alarm');
 
         function saveAll() {
             localStorage.setItem('tasks', document.getElementById('task-list').innerHTML);
+            localStorage.setItem('prayers', document.getElementById('prayer-list').innerHTML);
             localStorage.setItem('blocks', document.getElementById('block-list').innerHTML);
             localStorage.setItem('schedule', document.getElementById('schedule-container').innerHTML);
             localStorage.setItem('totalMinutes', sessionsTotalMinutes);
             localStorage.setItem('theme', document.body.className);
             localStorage.setItem('customColor', getComputedStyle(document.documentElement).getPropertyValue('--primary'));
+            
+            // حفظ تاريخ آخر تحديث
+            localStorage.setItem('lastDate', new Date().toDateString());
         }
 
         function loadAll() {
+            // منطق تصفير الصلوات كل يوم جديد
+            const today = new Date().toDateString();
+            const lastDate = localStorage.getItem('lastDate');
+
             if(localStorage.getItem('tasks')) document.getElementById('task-list').innerHTML = localStorage.getItem('tasks');
+            
+            // إذا كان اليوم مختلف عن آخر يوم سجلنا فيه، نصفر الصلوات
+            if (lastDate && lastDate !== today) {
+                const prayerRows = document.querySelectorAll('#prayer-list .item-row');
+                prayerRows.forEach(row => row.classList.remove('completed'));
+                saveAll();
+            } else if(localStorage.getItem('prayers')) {
+                document.getElementById('prayer-list').innerHTML = localStorage.getItem('prayers');
+            }
+
             if(localStorage.getItem('blocks')) document.getElementById('block-list').innerHTML = localStorage.getItem('blocks');
             if(localStorage.getItem('schedule')) document.getElementById('schedule-container').innerHTML = localStorage.getItem('schedule');
             if(localStorage.getItem('theme')) document.body.className = localStorage.getItem('theme');
             if(localStorage.getItem('customColor')) setCustomColor(localStorage.getItem('customColor'));
-            
-            // تحميل الخلفية من IndexedDB
             loadBg();
-
             if(localStorage.getItem('totalMinutes')) {
                 sessionsTotalMinutes = parseInt(localStorage.getItem('totalMinutes'));
                 document.getElementById('total-minutes').innerText = sessionsTotalMinutes;
             }
         }
 
-        // --- نظام حفظ الخلفية المتطور (IndexedDB) ---
         function uploadBg(input) {
             const file = input.files[0];
             if (!file) return;
@@ -242,7 +300,6 @@
             reader.onload = function(e) {
                 const imgData = e.target.result;
                 document.body.style.backgroundImage = `url('${imgData}')`;
-                
                 const request = indexedDB.open("TromadoroDB", 1);
                 request.onupgradeneeded = (ev) => ev.target.result.createObjectStore("settings");
                 request.onsuccess = (ev) => {
@@ -259,9 +316,7 @@
             request.onsuccess = (ev) => {
                 const db = ev.target.result;
                 db.transaction("settings").objectStore("settings").get("bgImage").onsuccess = (e) => {
-                    if (e.target.result) {
-                        document.body.style.backgroundImage = `url('${e.target.result}')`;
-                    }
+                    if (e.target.result) document.body.style.backgroundImage = `url('${e.target.result}')`;
                 };
             };
         }
@@ -274,7 +329,6 @@
                 db.transaction("settings", "readwrite").objectStore("settings").delete("bgImage");
             };
         }
-        // ------------------------------------------
 
         function setCustomColor(color) {
             document.documentElement.style.setProperty('--primary', color);
@@ -340,6 +394,28 @@
             document.getElementById('action-btn').innerText = "ابدأ الجلسة";
         }
 
+        function toggleStopwatch() {
+            const btn = document.getElementById('sw-btn');
+            const mDisp = document.getElementById('sw-min');
+            const sDisp = document.getElementById('sw-sec');
+            if (!swRunning) {
+                swRunning = true; btn.innerText = "توقف";
+                swInt = setInterval(() => {
+                    swSecs++;
+                    mDisp.innerText = Math.floor(swSecs / 60).toString().padStart(2, '0');
+                    sDisp.innerText = (swSecs % 60).toString().padStart(2, '0');
+                }, 1000);
+            } else {
+                clearInterval(swInt); swRunning = false; btn.innerText = "استئناف";
+            }
+        }
+        function resetStopwatch() {
+            clearInterval(swInt); swRunning = false; swSecs = 0;
+            document.getElementById('sw-min').innerText = "00";
+            document.getElementById('sw-sec').innerText = "00";
+            document.getElementById('sw-btn').innerText = "ابدأ العداد";
+        }
+
         function addTask() {
             const inp = document.getElementById('task-in'), val = inp.value; if (!val) return;
             const d = document.createElement('div'); d.className = 'item-row';
@@ -381,10 +457,10 @@
 
         function setTheme(cls) { 
             document.body.className = cls;
-            if (cls === '') setCustomColor('#c29b40');
-            else if (cls === 'dark-red') setCustomColor('#ff4b4b');
-            else if (cls === 'dark-blue') setCustomColor('#4b7bff');
-            else if (cls === 'dark-purple') setCustomColor('#a34bff');
+            if (cls === '') setCustomColor('#00ffcc');
+            else if (cls === 'dark-red') setCustomColor('#ff3131');
+            else if (cls === 'dark-blue') setCustomColor('#00d2ff');
+            else if (cls === 'dark-purple') setCustomColor('#bc13fe');
             saveAll();
         }
     </script>
