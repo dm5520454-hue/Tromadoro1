@@ -147,64 +147,60 @@
         ._final_exam_close { background: var(--primary); color: #000; border: none; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer; }
 
         /* ====================================================== */
-        /* --- START OF STREET GANGSTA PLANNER STYLES --- */
+        /* --- STREET GANGSTA PLANNER STYLES (NEW) --- */
         /* ====================================================== */
-        ._street_planner_overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #000; z-index: 5000; display: none; flex-direction: column; 
-            padding: 20px; box-sizing: border-box; overflow-y: auto; 
-            background-image: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.8)), url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+        ._street_planner_container { 
+            padding: 20px 10px;
+            background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+            background-attachment: local;
+            border-radius: 25px;
+            min-height: 80vh;
         }
         
         ._street_header { 
-            font-family: 'Permanent Marker', cursive; font-size: 2.2rem; 
-            color: #ff00ff; text-shadow: 3px 3px 0px #000, 5px 5px 0px var(--primary);
-            margin: 20px 0; transform: rotate(-2deg);
+            font-family: 'Permanent Marker', cursive; font-size: 2rem; 
+            color: #ff00ff; text-shadow: 2px 2px 0px #000, 4px 4px 0px var(--primary);
+            margin-bottom: 25px; transform: rotate(-2deg);
         }
 
-        ._street_grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-bottom: 50px; }
+        ._street_grid { display: grid; grid-template-columns: 1fr; gap: 15px; padding-bottom: 50px; }
 
         ._street_card { 
             background: #111; border: 2px solid #fff; border-radius: 4px; 
-            padding: 10px; text-align: right; position: relative; 
-            box-shadow: 4px 4px 0px var(--primary); transition: 0.2s;
-            min-height: 120px; display: flex; flex-direction: column;
+            padding: 15px; text-align: right; position: relative; 
+            box-shadow: 6px 6px 0px var(--primary); transition: 0.2s;
+            display: flex; flex-direction: column;
         }
-        ._street_card:nth-child(even) { box-shadow: 4px 4px 0px #ff00ff; transform: rotate(1deg); }
+        ._street_card:nth-child(even) { box-shadow: 6px 6px 0px #ff00ff; transform: rotate(1deg); }
         ._street_card:nth-child(odd) { transform: rotate(-1deg); }
 
         ._street_day_label { 
-            font-family: 'Permanent Marker', cursive; font-size: 1rem; 
+            font-family: 'Permanent Marker', cursive; font-size: 1.1rem; 
             background: #fff; color: #000; display: inline-block; 
-            padding: 2px 8px; margin-bottom: 8px; transform: skew(-10deg); align-self: flex-start;
+            padding: 2px 10px; margin-bottom: 12px; transform: skew(-10deg); align-self: flex-start;
         }
 
         ._street_items_container { flex-grow: 1; }
 
         ._street_item_row {
-            display: flex; align-items: center; gap: 5px; margin-bottom: 5px;
+            display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
         }
 
         ._street_input { 
             flex-grow: 1; background: #222; border: 1px solid #444; 
-            color: var(--primary); padding: 6px; font-size: 0.75rem; 
-            outline: none; border-radius: 2px;
+            color: var(--primary); padding: 8px; font-size: 0.85rem; 
+            outline: none; border-radius: 2px; font-family: 'Tajawal';
         }
 
         ._street_add_item_btn {
             background: none; border: 1px dashed var(--primary); color: var(--primary);
-            font-size: 1.2rem; padding: 0 10px; cursor: pointer; border-radius: 4px; margin-top: 5px;
-        }
-
-        ._street_back_btn { 
-            background: #ff00ff; color: #fff; border: 2px solid #fff; 
-            padding: 10px 20px; font-weight: bold; cursor: pointer; 
-            box-shadow: 4px 4px 0px #000; margin-bottom: 20px; align-self: flex-start;
+            font-size: 1.2rem; padding: 5px; cursor: pointer; border-radius: 4px; margin-top: 5px;
+            font-weight: bold;
         }
         /* ====================================================== */
     </style>
 </head>
-<body onload="initPWA(); loadAll(); _final_exam_init(); _street_init()">
+<body onload="initPWA(); loadAll(); _final_exam_init(); _street_init_page()">
     
     <audio id="alarm" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
     
@@ -360,6 +356,13 @@
         </div>
     </div>
 
+    <div id="weekly-street-page" class="page">
+        <div class="_street_planner_container">
+            <div class="_street_header">MAZEN'S WEEKLY</div>
+            <div id="_street_grid_container_main" class="_street_grid"></div>
+            <p style="color: #444; font-size: 0.7rem; margin-top: 30px; font-family: 'Permanent Marker'; letter-spacing: 2px;">STREET STYLE ACTIVATED 🔥</p>
+        </div>
+    </div>
     <div id="time-block" class="page">
         <h1>Time Block</h1>
         <div class="glass-card">
@@ -415,20 +418,12 @@
         <button class="_final_exam_close" onclick="_final_exam_close_diary()">حفظ وإغلاق</button>
     </div>
 
-    <div id="_street_planner_overlay" class="_street_planner_overlay">
-        <button class="_street_back_btn" onclick="_street_toggle(false)">X رجوع</button>
-        <div class="_street_header">MAZEN'S WEEKLY</div>
-        <div id="_street_grid_container" class="_street_grid"></div>
-        <p style="color: #444; font-size: 0.6rem; margin-top: 30px;">STREET STYLE MODE ACTIVATED 🛹🔥</p>
-    </div>
-
     <nav class="navbar">
         <div class="nav-item active" onclick="showP('muslim-page', this)">🕋</div>
         <div class="nav-item" onclick="showP('home', this)">⏳</div>
         <div class="nav-item" onclick="showP('stopwatch-page', this)">🏁</div>
         <div class="nav-item" onclick="showP('tasks', this)">✅</div>
-        <div class="nav-item" onclick="_street_toggle(true)">📑</div>
-        <div class="nav-item" onclick="showP('time-block', this)">⏱️</div>
+        <div class="nav-item" onclick="showP('weekly-street-page', this)">📑</div> <div class="nav-item" onclick="showP('time-block', this)">⏱️</div>
         <div class="nav-item" onclick="showP('schedule', this)">📅</div>
         <div class="nav-item" onclick="showP('subjects', this)">📚</div>
     </nav>
@@ -673,14 +668,15 @@
         }
 
         /* ====================================================== */
-        /* --- STREET GANGSTA PLANNER LOGIC (FIXED SYSTEM) --- */
+        /* --- STREET GANGSTA PLANNER LOGIC (INTEGRATED) --- */
         /* ====================================================== */
         const _street_days = ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
         
-        function _street_init() {
-            const container = document.getElementById('_street_grid_container');
+        function _street_init_page() {
+            const container = document.getElementById('_street_grid_container_main');
+            if (!container) return;
             container.innerHTML = "";
-            const stored = JSON.parse(localStorage.getItem('_street_plan_data_v2') || '{}');
+            const stored = JSON.parse(localStorage.getItem('_street_plan_data_main') || '{}');
             
             _street_days.forEach(day => {
                 const dayItems = stored[day] || [];
@@ -688,41 +684,37 @@
                 card.className = '_street_card';
                 card.innerHTML = `
                     <div class="_street_day_label">${day}</div>
-                    <div id="street_list_${day}" class="_street_items_container"></div>
-                    <button class="_street_add_item_btn" onclick="_street_add_item('${day}')">+</button>
+                    <div id="street_list_main_${day}" class="_street_items_container"></div>
+                    <button class="_street_add_item_btn" onclick="_street_add_item_main('${day}')">+ مادة جديدة</button>
                 `;
                 container.appendChild(card);
-                dayItems.forEach(text => _street_render_item(day, text));
+                dayItems.forEach(text => _street_render_item_main(day, text));
             });
         }
 
-        function _street_add_item(day) {
-            _street_render_item(day, "");
-            _street_save_all();
+        function _street_add_item_main(day) {
+            _street_render_item_main(day, "");
+            _street_save_main();
         }
 
-        function _street_render_item(day, text) {
-            const list = document.getElementById(`street_list_${day}`);
+        function _street_render_item_main(day, text) {
+            const list = document.getElementById(`street_list_main_${day}`);
             const row = document.createElement('div');
             row.className = '_street_item_row';
             row.innerHTML = `
-                <input type="text" class="_street_input" placeholder="اكتب المادة..." value="${text}" oninput="_street_save_all()">
-                <span style="color:red; cursor:pointer; font-weight:bold; padding: 0 5px;" onclick="this.parentElement.remove(); _street_save_all()">×</span>
+                <input type="text" class="_street_input" placeholder="اسم المادة/الدرس" value="${text}" oninput="_street_save_main()">
+                <span style="color:red; cursor:pointer; font-weight:bold; padding: 0 10px;" onclick="this.parentElement.remove(); _street_save_main()">×</span>
             `;
             list.appendChild(row);
         }
 
-        function _street_save_all() {
+        function _street_save_main() {
             let data = {};
             _street_days.forEach(day => {
-                const inputs = document.querySelectorAll(`#street_list_${day} ._street_input`);
+                const inputs = document.querySelectorAll(`#street_list_main_${day} ._street_input`);
                 data[day] = Array.from(inputs).map(inp => inp.value);
             });
-            localStorage.setItem('_street_plan_data_v2', JSON.stringify(data));
-        }
-
-        function _street_toggle(show) {
-            document.getElementById('_street_planner_overlay').style.display = show ? 'flex' : 'none';
+            localStorage.setItem('_street_plan_data_main', JSON.stringify(data));
         }
     </script>
 </body>
