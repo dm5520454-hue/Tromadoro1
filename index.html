@@ -146,9 +146,7 @@
         ._final_exam_diary_content { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; flex: 1; margin: 20px 0; padding: 20px; color: #fff; font-size: 1.1rem; line-height: 1.8; outline: none; text-align: right; backdrop-filter: blur(30px); resize: none; width: 100%; box-sizing: border-box; }
         ._final_exam_close { background: var(--primary); color: #000; border: none; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer; }
 
-        /* ====================================================== */
         /* --- STREET GANGSTA PLANNER STYLES (NEW) --- */
-        /* ====================================================== */
         ._street_planner_container { 
             padding: 20px 10px;
             background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
@@ -197,10 +195,34 @@
             font-size: 1.2rem; padding: 5px; cursor: pointer; border-radius: 4px; margin-top: 5px;
             font-weight: bold;
         }
+
         /* ====================================================== */
+        /* --- LECTURES TRACKER NEW STYLES --- */
+        /* ====================================================== */
+        .lectures-grid { display: grid; grid-template-columns: 1fr; gap: 15px; padding-bottom: 50px; }
+        .lec-day-column { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 20px; padding: 15px; text-align: right; }
+        .lec-day-name { color: var(--primary); font-family: 'Cinzel'; border-bottom: 1px solid var(--border); margin-bottom: 10px; padding-bottom: 5px; font-weight: bold; }
+        
+        .lecture-card { background: #111; border-right: 4px solid var(--primary); padding: 10px; border-radius: 8px; margin-bottom: 10px; position: relative; transition: 0.3s; }
+        .lecture-card.completed { opacity: 0.5; border-right-color: gray; }
+        .lec-info { display: flex; justify-content: space-between; font-size: 0.85rem; color: #fff; }
+        .lec-duration { color: var(--primary); font-weight: bold; font-size: 0.75rem; }
+        
+        .lec-input-group { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+        .lec-input { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 8px; font-size: 0.7rem; flex: 1; outline: none; }
+        .total-week-hours { font-size: 1.1rem; color: var(--primary); text-shadow: 0 0 10px var(--primary); margin-bottom: 20px; font-family: 'Cinzel'; }
+
+        /* --- LECTURE LOG MODAL STYLES (NEW) --- */
+        ._lec_log_overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; display: none; flex-direction: column; padding: 20px; box-sizing: border-box; }
+        ._lec_log_container { background: #111; border: 1px solid var(--border); border-radius: 20px; flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        ._lec_log_textarea { flex: 1; background: #000; color: #fff; border: 1px solid #333; border-radius: 12px; padding: 15px; font-family: 'Tajawal'; font-size: 1rem; line-height: 1.6; outline: none; resize: none; text-align: right; }
+        ._lec_log_footer { display: flex; justify-content: space-between; align-items: center; }
+        ._lec_log_save { background: var(--primary); color: #000; border: none; padding: 12px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        /* ====================================================== */
+
     </style>
 </head>
-<body onload="initPWA(); loadAll(); _final_exam_init(); _street_init_page()">
+<body onload="initPWA(); loadAll(); _final_exam_init(); _street_init_page(); initLecturesPage();">
     
     <audio id="alarm" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
     
@@ -363,6 +385,16 @@
             <p style="color: #444; font-size: 0.7rem; margin-top: 30px; font-family: 'Permanent Marker'; letter-spacing: 2px;">STREET STYLE ACTIVATED 🔥</p>
         </div>
     </div>
+
+    <div id="lectures-page" class="page">
+        <h1>جدول المحاضرات 🎙️</h1>
+        <div class="glass-card">
+            <div class="total-week-hours">إجمالي ساعات الأسبوع: <span id="week-hours-sum" style="color:var(--primary)">0</span> ساعة</div>
+            <div id="lectures-container-main" class="lectures-grid">
+                </div>
+        </div>
+    </div>
+
     <div id="time-block" class="page">
         <h1>Time Block</h1>
         <div class="glass-card">
@@ -418,12 +450,28 @@
         <button class="_final_exam_close" onclick="_final_exam_close_diary()">حفظ وإغلاق</button>
     </div>
 
+    <div id="_lec_log_overlay" class="_lec_log_overlay">
+        <h2 id="_lec_log_title" style="color: var(--primary); font-family: 'Cinzel'; margin-bottom: 10px;"></h2>
+        <div class="_lec_log_container">
+            <div style="display: flex; gap: 10px; align-items: center; justify-content: flex-end;">
+                <input type="number" id="_lec_log_focus" min="1" max="10" value="10" style="width: 50px; background: #000; border: 1px solid var(--border); color: var(--primary); border-radius: 8px; text-align: center; padding: 5px;">
+                <label style="font-size: 0.9rem; color: #fff;">:مستوى التركيز</label>
+            </div>
+            <textarea id="_lec_log_text" class="_lec_log_textarea" placeholder="اكتب اللي حصل ف المحاضرة دي، مستواك، وأي ملاحظات..."></textarea>
+            <div class="_lec_log_footer">
+                <button onclick="document.getElementById('_lec_log_overlay').style.display='none'" style="background: none; border: 1px solid red; color: red; padding: 10px 20px; border-radius: 12px; cursor: pointer;">إلغاء</button>
+                <button class="_lec_log_save" onclick="saveLectureDiaryEntry()">حفظ التدوينة</button>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar">
         <div class="nav-item active" onclick="showP('muslim-page', this)">🕋</div>
         <div class="nav-item" onclick="showP('home', this)">⏳</div>
-        <div class="nav-item" onclick="showP('stopwatch-page', this)">🏁</div>
+        <div class="nav-item" onclick="showP('lectures-page', this)">🎙️</div>
         <div class="nav-item" onclick="showP('tasks', this)">✅</div>
-        <div class="nav-item" onclick="showP('weekly-street-page', this)">📑</div> <div class="nav-item" onclick="showP('time-block', this)">⏱️</div>
+        <div class="nav-item" onclick="showP('weekly-street-page', this)">📑</div> 
+        <div class="nav-item" onclick="showP('time-block', this)">⏱️</div>
         <div class="nav-item" onclick="showP('schedule', this)">📅</div>
         <div class="nav-item" onclick="showP('subjects', this)">📚</div>
     </nav>
@@ -447,9 +495,9 @@
             'عربي': ["محمد صلاح", "رضا الفاروق", "محمد صفوت (بسطتهالك)", "وليد محسن", "محمد ماهر", "إبراهيم الجوهري", "أحمد إبراهيم", "عبد الله الشهاوي", "إيهاب السكران", "حسن الشيخ", "سعدون الجابر", "طارق فتحي", "عماد حامد", "محمود عبد العزيز", "مصطفى فريد", "هاني الكردي", "ياسر عمارة", "مدرستنا عربي", "اللغة العربية كبسة", "الاستاذ في اللغة"],
             'فيزياء': ["محمد عبد المعبود", "محمود مجدي", "كيرلس ناجي", "حسام خليل", "أحمد أبو عرب", "محمد عنتر", "أحمد بركة", "خالد صقر فيزياء", "إاسلام أمان", "أحمد رياض", "تامر القاضي", "زكي حجازي", "شريف الشافعي", "علي رياض", "العبقري في الفيزياء", "فيزياء أونلاين", "الفيزياء الممتعة", "بوابة الفيزياء", "مدرستنا فيزياء", "الفيزياء الممتعة", "بوابة الفيزياء", "مدرستنا فيزياء", "المهندس في الفيزياء"],
             'كيمياء': ["خالد صقر", "محمد عبد الجواد", "عبد الله حبشي", "محمد صقر", "محمد حامد", "إيهاب سعيد", "سامح إبراهيم", "مصطفى يوسف", "هشام نصار", "علاء علي", "أحمد مسعد", "شريف فتحي", "محمد غنيم", "عمرو الصيفي", "باسم سمير", "حازم عثمان", "عصام فوزي", "فتحي محمد", "ياسين بركات", "الكيمياء في كبسولة"],
-            'رياضيات': ["أحمد الفواخري", "لطفي زهران", "سعد عبد الموجود", "ماهر بكر", "محمد الديمردواش", "فتحي remses", "أحمد غريب", "شريف فتحي", "إبراهيم منصف", "محمد عبد السميع", "علاء أبو الخير", "إسلام شاكر", "أيمن الغزالي", "سيد فوزي", "عبد الله محمد", "علي الخوارزمي", "محمد بركات", "نادي الرياضيات", "الرياضيات أونلاين", "باشا رياضة"],
+            'رياضيات': ["أحمد الفواخري", "لطفي زهران", "سعد عبد الموجود", "ماهر بكر", "محمد الديمردواش", "فتحي remses", "أحمد غريب", "شريف فتحي", "إبراهيم منصف", "محمد عبد السميع", "علاء أبو الخير", "إاسلام شاكر", "أيمن الغزالي", "سيد فوزي", "عبد الله محمد", "علي الخوارزمي", "محمد بركات", "نادي الرياضيات", "الرياضيات أونلاين", "باشا رياضة"],
             'أحياء': ["محمد أيمن", "موسى الجوهري", "حيدر محمد", "أحمد الجوهري", "أحمد الشرقاوي", "حسن محرم", "سمر صبري", "عبد الرحمن الغرباوي", "محمد الساعي", "محمد نصر", "أيمن صبري", "إبراهيم حسين", "باسم محمود", "خالد غانم", "سعد بدوي", "عاطف السقا", "عمر محمد", "محمد المليجي", "ناجي صبري", "هاني فرحات"],
-            'إنجليزي': ["أحمد أبو زيد", "إسلام تاج", "محمد عمر", "علي الهواري", "أحمد جلال", "يحيى آدم", "مستر إنجليزي", "قناة ذاكرلي إنجليزي", "أحمد حسن", "حاتم شريف", "خالد جلال", "سيد إبراهيم", "طارق علي", "عادل عبد الغني", "محمد فوزي", "محمود كمال", "نادر غانم", "هشام توفيق", "وليد خالد", "ياسر جابر"]
+            'إنجليزي': ["أحمد أبو زيد", "إاسلام تاج", "محمد عمر", "علي الهواري", "أحمد جلال", "يحيى آدم", "مستر إنجليزي", "قناة ذاكرلي إنجليزي", "أحمد حسن", "حاتم شريف", "خالد جلال", "سيد إبراهيم", "طارق علي", "عادل عبد الغني", "محمد فوزي", "محمود كمال", "نادر غانم", "هشام توفيق", "وليد خالد", "ياسر جابر"]
         };
 
         const quotes = [
@@ -667,9 +715,7 @@
             document.getElementById('_final_exam_overlay').style.display = 'none';
         }
 
-        /* ====================================================== */
-        /* --- STREET GANGSTA PLANNER LOGIC (INTEGRATED) --- */
-        /* ====================================================== */
+        /* --- STREET GANGSTA PLANNER LOGIC --- */
         const _street_days = ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
         
         function _street_init_page() {
@@ -682,32 +728,19 @@
                 const dayItems = stored[day] || [];
                 const card = document.createElement('div');
                 card.className = '_street_card';
-                card.innerHTML = `
-                    <div class="_street_day_label">${day}</div>
-                    <div id="street_list_main_${day}" class="_street_items_container"></div>
-                    <button class="_street_add_item_btn" onclick="_street_add_item_main('${day}')">+ مادة جديدة</button>
-                `;
+                card.innerHTML = `<div class="_street_day_label">${day}</div><div id="street_list_main_${day}" class="_street_items_container"></div><button class="_street_add_item_btn" onclick="_street_add_item_main('${day}')">+ مادة جديدة</button>`;
                 container.appendChild(card);
                 dayItems.forEach(text => _street_render_item_main(day, text));
             });
         }
 
-        function _street_add_item_main(day) {
-            _street_render_item_main(day, "");
-            _street_save_main();
-        }
-
+        function _street_add_item_main(day) { _street_render_item_main(day, ""); _street_save_main(); }
         function _street_render_item_main(day, text) {
             const list = document.getElementById(`street_list_main_${day}`);
-            const row = document.createElement('div');
-            row.className = '_street_item_row';
-            row.innerHTML = `
-                <input type="text" class="_street_input" placeholder="اسم المادة/الدرس" value="${text}" oninput="_street_save_main()">
-                <span style="color:red; cursor:pointer; font-weight:bold; padding: 0 10px;" onclick="this.parentElement.remove(); _street_save_main()">×</span>
-            `;
+            const row = document.createElement('div'); row.className = '_street_item_row';
+            row.innerHTML = `<input type="text" class="_street_input" placeholder="اسم المادة/الدرس" value="${text}" oninput="_street_save_main()"><span style="color:red; cursor:pointer; font-weight:bold; padding: 0 10px;" onclick="this.parentElement.remove(); _street_save_main()">×</span>`;
             list.appendChild(row);
         }
-
         function _street_save_main() {
             let data = {};
             _street_days.forEach(day => {
@@ -715,6 +748,117 @@
                 data[day] = Array.from(inputs).map(inp => inp.value);
             });
             localStorage.setItem('_street_plan_data_main', JSON.stringify(data));
+        }
+
+        /* ====================================================== */
+        /* --- LECTURES TRACKER NEW LOGIC (WITH DIARY) --- */
+        /* ====================================================== */
+        const lecDays = ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
+        let currentLecTarget = null;
+
+        function initLecturesPage() {
+            const container = document.getElementById('lectures-container-main');
+            if(!container) return;
+            container.innerHTML = "";
+            const storedLecs = JSON.parse(localStorage.getItem('tromadoro_lectures_data') || '{}');
+
+            lecDays.forEach(day => {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'lec-day-column';
+                dayDiv.innerHTML = `
+                    <div class="lec-day-name">${day}</div>
+                    <div id="lec-list-main-${day}"></div>
+                    <div class="lec-input-group">
+                        <input type="text" id="lec-name-in-${day}" placeholder="اسم المحاضرة" class="lec-input">
+                        <input type="number" id="lec-time-in-${day}" placeholder="ساعة" class="lec-input" style="max-width:55px">
+                        <button onclick="addLectureToDay('${day}')" style="background:var(--primary); border:none; border-radius:8px; width:35px; cursor:pointer; font-weight:bold">+</button>
+                    </div>
+                `;
+                container.appendChild(dayDiv);
+                if(storedLecs[day]) {
+                    storedLecs[day].forEach(lec => renderLectureRowMain(day, lec.name, lec.time, lec.done));
+                }
+            });
+            calculateTotalLecturesHours();
+        }
+
+        function addLectureToDay(day) {
+            const nameIn = document.getElementById(`lec-name-in-${day}`);
+            const timeIn = document.getElementById(`lec-time-in-${day}`);
+            if(!nameIn.value || !timeIn.value) return;
+            renderLectureRowMain(day, nameIn.value, timeIn.value, false);
+            nameIn.value = ""; timeIn.value = "";
+            saveLecturesDataMain();
+        }
+
+        function renderLectureRowMain(day, name, time, done) {
+            const list = document.getElementById(`lec-list-main-${day}`);
+            const card = document.createElement('div');
+            card.className = `lecture-card ${done ? 'completed' : ''}`;
+            card.innerHTML = `
+                <div class="lec-info">
+                    <span style="${done ? 'text-decoration:line-through' : ''}">${name}</span>
+                    <span class="lec-duration">${time} ساعة</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-top:5px; align-items:center;">
+                    <span style="font-size:0.65rem; cursor:pointer; color:var(--primary)" onclick="toggleLectureDoneMain(this)">${done ? '✅ تم' : '⏳ جاري'}</span>
+                    <button class="sub-btn" style="font-size: 0.6rem; padding: 2px 8px;" onclick="openLectureDiary('${name}')">سجل عملت ايه</button>
+                    <span style="font-size:0.65rem; cursor:pointer; color:red" onclick="this.parentElement.parentElement.remove(); saveLecturesDataMain();">حذف</span>
+                </div>
+            `;
+            list.appendChild(card);
+            calculateTotalLecturesHours();
+        }
+
+        function openLectureDiary(name) {
+            currentLecTarget = name;
+            const data = JSON.parse(localStorage.getItem('tromadoro_lecture_diaries') || '{}');
+            const entry = data[name] || { text: "", focus: 10 };
+            document.getElementById('_lec_log_title').innerText = `يوميات: ${name}`;
+            document.getElementById('_lec_log_text').value = entry.text;
+            document.getElementById('_lec_log_focus').value = entry.focus;
+            document.getElementById('_lec_log_overlay').style.display = 'flex';
+        }
+
+        function saveLectureDiaryEntry() {
+            const text = document.getElementById('_lec_log_text').value;
+            const focus = document.getElementById('_lec_log_focus').value;
+            let data = JSON.parse(localStorage.getItem('tromadoro_lecture_diaries') || '{}');
+            data[currentLecTarget] = { text: text, focus: focus };
+            localStorage.setItem('tromadoro_lecture_diaries', JSON.stringify(data));
+            document.getElementById('_lec_log_overlay').style.display = 'none';
+        }
+
+        function toggleLectureDoneMain(el) {
+            const card = el.parentElement.parentElement;
+            card.classList.toggle('completed');
+            el.innerText = card.classList.contains('completed') ? '✅ تم' : '⏳ جاري';
+            saveLecturesDataMain();
+        }
+
+        function saveLecturesDataMain() {
+            let data = {};
+            lecDays.forEach(day => {
+                data[day] = [];
+                document.querySelectorAll(`#lec-list-main-${day} .lecture-card`).forEach(card => {
+                    data[day].push({
+                        name: card.querySelector('.lec-info span:first-child').innerText,
+                        time: card.querySelector('.lec-duration').innerText.split(' ')[0],
+                        done: card.classList.contains('completed')
+                    });
+                });
+            });
+            localStorage.setItem('tromadoro_lectures_data', JSON.stringify(data));
+            calculateTotalLecturesHours();
+        }
+
+        function calculateTotalLecturesHours() {
+            let total = 0;
+            document.querySelectorAll('.lec-duration').forEach(el => {
+                total += parseFloat(el.innerText) || 0;
+            });
+            const sumEl = document.getElementById('week-hours-sum');
+            if(sumEl) sumEl.innerText = total;
         }
     </script>
 </body>
