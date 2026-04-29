@@ -212,7 +212,53 @@
         .lec-input { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 8px; font-size: 0.7rem; flex: 1; outline: none; }
         .total-week-hours { font-size: 1.1rem; color: var(--primary); text-shadow: 0 0 10px var(--primary); margin-bottom: 20px; font-family: 'Cinzel'; }
 
-        /* --- LECTURE LOG MODAL STYLES (NEW) --- */
+        /* --- PRIORITY COLORS --- */
+        .priority-urgent { border-right-color: #ff3131 !important; }
+        .priority-high { border-right-color: #ff9500 !important; }
+        .priority-medium { border-right-color: #ffd700 !important; }
+        .priority-low { border-right-color: #00ff88 !important; }
+
+        .task-priority { 
+            font-size: 0.65rem; padding: 3px 8px; border-radius: 8px; 
+            font-weight: bold; margin-right: 10px;
+        }
+        .task-priority.urgent { background: rgba(255,49,49,0.2); color: #ff3131; }
+        .task-priority.high { background: rgba(255,149,0,0.2); color: #ff9500; }
+        .task-priority.medium { background: rgba(255,215,0,0.2); color: #ffd700; }
+        .task-priority.low { background: rgba(0,255,136,0.2); color: #00ff88; }
+
+        .task-deadline { 
+            font-size: 0.65rem; color: #bbb; margin-top: 5px;
+            padding: 4px 8px; background: rgba(255,255,255,0.05);
+            border-radius: 6px; display: inline-block;
+        }
+        .task-deadline.urgent-deadline { color: #ff3131; background: rgba(255,49,49,0.1); }
+        .task-deadline.soon-deadline { color: #ff9500; background: rgba(255,149,0,0.1); }
+
+        /* --- EXAM PLANNING PAGE --- */
+        .exam-timeline { padding: 15px 0; }
+        .exam-item { 
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            border-left: 4px solid #ff3131;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .exam-subject { color: var(--primary); font-weight: bold; font-size: 1rem; margin-bottom: 8px; }
+        .exam-date { font-size: 0.8rem; color: #ff3131; font-weight: bold; margin-bottom: 8px; }
+        .exam-days-left { 
+            display: inline-block; background: rgba(255,49,49,0.2); 
+            color: #ff3131; padding: 4px 12px; border-radius: 50px; font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .exam-progress { margin-top: 10px; }
+        .exam-prep-days { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+        .prep-day { 
+            background: rgba(0,255,204,0.2); color: var(--primary); 
+            padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold;
+        }
+        
         ._lec_log_overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; display: none; flex-direction: column; padding: 20px; box-sizing: border-box; }
         ._lec_log_container { background: #111; border: 1px solid var(--border); border-radius: 20px; flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
         ._lec_log_textarea { flex: 1; background: #000; color: #fff; border: 1px solid #333; border-radius: 12px; padding: 15px; font-family: 'Tajawal'; font-size: 1rem; line-height: 1.6; outline: none; resize: none; text-align: right; }
@@ -367,13 +413,24 @@
     </div>
 
     <div id="tasks" class="page">
-        <h1>المهام العاجلة</h1>
+        <h1>المهام العاجلة 📋</h1>
         <div class="glass-card">
             <div class="progress-container"><div id="tasks-progress" class="progress-bar"></div></div>
             <div id="task-list"></div>
-            <div style="display:flex; gap:10px; margin-top:15px">
-                <input type="text" id="task-in" placeholder="أضف مهمة عامة..." class="time-input" style="flex:1">
-                <button onclick="addTask()" style="background:var(--primary); border:none; border-radius:10px; padding:10px 20px; font-weight:bold">+</button>
+            <div style="display:flex; gap:10px; margin-top:15px; flex-direction:column;">
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="task-in" placeholder="أضف مهمة..." class="time-input" style="flex:1">
+                    <button onclick="addTask()" style="background:var(--primary); border:none; border-radius:10px; padding:10px 20px; font-weight:bold; color:#000">+</button>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <select id="task-priority-select" class="time-input" style="flex:0.5; text-align: right;">
+                        <option value="low">منخفض 🟢</option>
+                        <option value="medium">متوسط 🟡</option>
+                        <option value="high">عالي 🟠</option>
+                        <option value="urgent">عاجل 🔴</option>
+                    </select>
+                    <input type="date" id="task-deadline-select" class="time-input" style="flex:0.5;">
+                </div>
             </div>
         </div>
     </div>
@@ -425,6 +482,21 @@
         </div>
     </div>
 
+    <div id="exam-planning-page" class="page">
+        <h1>التخطيط للامتحانات 🎓</h1>
+        <div class="glass-card">
+            <div style="text-align: right; margin-bottom: 15px; font-size: 0.9rem; color: #888;">
+                أضف امتحاناتك هنا، والتطبيق سيقترح عليك أيام المراجعة المثالية
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="exam-subject" placeholder="اسم المادة/الامتحان" class="time-input">
+                <input type="date" id="exam-date" class="time-input">
+                <button onclick="addExam()" style="background: var(--primary); border: none; border-radius: 10px; padding: 12px; font-weight: bold; color: #000;">+ إضافة امتحان</button>
+            </div>
+            <div class="exam-timeline" id="exams-list"></div>
+        </div>
+    </div>
+
     <div id="subjects" class="page">
         <h1>المكتبة</h1>
         <div id="subject-list" class="glass-card">
@@ -473,7 +545,7 @@
         <div class="nav-item" onclick="showP('weekly-street-page', this)">📑</div> 
         <div class="nav-item" onclick="showP('time-block', this)">⏱️</div>
         <div class="nav-item" onclick="showP('schedule', this)">📅</div>
-        <div class="nav-item" onclick="showP('subjects', this)">📚</div>
+        <div class="nav-item" onclick="showP('exam-planning-page', this)">🎓</div>
     </nav>
 
     <script>
@@ -526,7 +598,9 @@
                 tasks: [], prayers: [], blocks: [], schedule: [],
                 totalMinutes: sessionsTotalMinutes, theme: document.body.className,
                 dailyGoal: document.getElementById('daily-goal-input').value,
-                completedSessions: completedSessions, lastDate: new Date().toDateString()
+                completedSessions: completedSessions, lastDate: new Date().toDateString(),
+                tasksData: tasksData,
+                examsData: examsData
             };
             document.querySelectorAll('#task-list .item-row').forEach(row => { data.tasks.push({ text: row.querySelector('.task-text').innerText, done: row.classList.contains('completed') }); });
             document.querySelectorAll('#prayer-list-new .item-row').forEach(row => { data.prayers.push({ text: row.querySelector('.task-text').innerText, done: row.classList.contains('completed') }); });
@@ -559,8 +633,17 @@
                 defaultPrayers.forEach(p => renderPrayerRow(p, false));
                 return;
             }
-            const data = JSON.parse(raw); const today = new Date().toDateString();
-            data.tasks.forEach(t => renderTaskRow(t.text, t.done));
+            const data = JSON.parse(raw); 
+            const today = new Date().toDateString();
+            
+            // Load new task system
+            if (data.tasksData) tasksData = data.tasksData;
+            if (data.examsData) examsData = data.examsData;
+            
+            Object.entries(tasksData).forEach(([id, task]) => {
+                renderTaskRow(id, task.text, task.done, task.priority, task.deadline);
+            });
+            
             const resetPrayers = data.lastDate !== today;
             data.prayers.forEach(p => renderPrayerRow(p.text, resetPrayers ? false : p.done));
             data.blocks.forEach(b => renderBlockRow(b.time, b.text, b.done));
@@ -570,7 +653,9 @@
             document.getElementById('completed-sessions').innerText = completedSessions;
             document.getElementById('daily-goal-input').value = data.dailyGoal || 0;
             document.body.className = data.theme || '';
-            loadBg(); updateAllProgress();
+            loadBg(); 
+            updateAllProgress();
+            renderExams();
         }
 
         function startFiveMinuteChallenge() {
@@ -663,7 +748,64 @@
         }
         function toggleStopwatch() { const btn = document.getElementById('sw-btn'), mDisp = document.getElementById('sw-min'), sDisp = document.getElementById('sw-sec'); if (!swRunning) { swRunning = true; btn.innerText = "توقف"; swInt = setInterval(() => { swSecs++; mDisp.innerText = Math.floor(swSecs / 60).toString().padStart(2, '0'); sDisp.innerText = (swSecs % 60).toString().padStart(2, '0'); }, 1000); } else { clearInterval(swInt); swRunning = false; btn.innerText = "استئناف"; } }
         function resetStopwatch() { clearInterval(swInt); swRunning = false; swSecs = 0; document.getElementById('sw-min').innerText = "00"; document.getElementById('sw-sec').innerText = "00"; document.getElementById('sw-btn').innerText = "ابدأ العداد"; }
-        function addTask() { const inp = document.getElementById('task-in'), val = inp.value; if (!val) return; renderTaskRow(val, false); inp.value = ""; saveAll(); updateProgress('task-list', 'tasks-progress'); }
+        let tasksData = {};
+        
+        function addTask() { 
+            const inp = document.getElementById('task-in'), 
+                  priority = document.getElementById('task-priority-select')?.value || 'low',
+                  deadline = document.getElementById('task-deadline-select')?.value || '',
+                  val = inp.value; 
+            if (!val) return; 
+            const id = 'task-' + Date.now();
+            tasksData[id] = { text: val, done: false, priority, deadline };
+            renderTaskRow(id, val, false, priority, deadline); 
+            inp.value = ""; 
+            saveAll(); 
+            updateProgress('task-list', 'tasks-progress');
+        }
+
+        function renderTaskRow(id, text, done, priority, deadline) {
+            const list = document.getElementById('task-list');
+            const daysLeft = deadline ? Math.ceil((new Date(deadline) - new Date()) / (1000*60*60*24)) : null;
+            const isOverdue = daysLeft !== null && daysLeft < 0;
+            const isSoon = daysLeft !== null && daysLeft >= 0 && daysLeft <= 2;
+            
+            const row = document.createElement('div');
+            row.className = `item-row priority-${priority || 'low'} ${done ? 'completed' : ''}`;
+            row.id = id;
+            
+            const priorityColors = { urgent: '🔴', high: '🟠', medium: '🟡', low: '🟢' };
+            const priorityAr = { urgent: 'عاجل', high: 'عالي', medium: 'متوسط', low: 'منخفض' };
+            
+            const dotContent = done ? "⭐" : "";
+            
+            row.innerHTML = `
+                <div class="check-dot" onclick="toggleTaskDone('${id}')">${dotContent}</div>
+                <div class="task-text" style="flex:1" contenteditable="false">${text}</div>
+                <span class="task-priority ${priority || 'low'}">${priorityColors[priority || 'low']} ${priorityAr[priority || 'low']}</span>
+                ${deadline ? `<span class="task-deadline ${isOverdue ? 'urgent-deadline' : isSoon ? 'soon-deadline' : ''}">${daysLeft === 0 ? 'اليوم' : daysLeft === 1 ? 'غداً' : daysLeft > 0 ? daysLeft + ' أيام' : 'متأخر'}</span>` : ''}
+                <span onclick="deleteTaskNew('${id}')" style="color:red; cursor:pointer; font-size:0.8rem">×</span>
+            `;
+            
+            list.appendChild(row);
+        }
+
+        function toggleTaskDone(id) {
+            tasksData[id].done = !tasksData[id].done;
+            const row = document.getElementById(id);
+            const checkDot = row.querySelector('.check-dot');
+            row.classList.toggle('completed');
+            checkDot.innerText = tasksData[id].done ? "⭐" : "";
+            saveAll();
+            updateProgress('task-list', 'tasks-progress');
+        }
+
+        function deleteTaskNew(id) {
+            document.getElementById(id)?.remove();
+            delete tasksData[id];
+            saveAll();
+            updateProgress('task-list', 'tasks-progress');
+        }
         function convertTo12Hour(time) { let [h, m] = time.split(':'); let ampm = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return `${h}:${m} ${ampm}`; }
         function addTimeBlock() { const timeIn = document.getElementById('block-time'), descIn = document.getElementById('block-desc'); if (!timeIn.value || !descIn.value) return; renderBlockRow(convertTo12Hour(timeIn.value), descIn.value, false); descIn.value = ""; saveAll(); updateProgress('block-list', 'blocks-progress'); }
         function addDay() { const dayId = 'day-' + Date.now(); renderDayBox('اسم اليوم...', dayId, []); saveAll(); updateScheduleProgress(); }
@@ -860,6 +1002,60 @@
             const sumEl = document.getElementById('week-hours-sum');
             if(sumEl) sumEl.innerText = total;
         }
+
+        /* ============== EXAM PLANNING SYSTEM ============== */
+        let examsData = [];
+
+        function addExam() {
+            const subject = document.getElementById('exam-subject').value;
+            const date = document.getElementById('exam-date').value;
+            if (!subject || !date) return;
+            examsData.push({ subject, date, id: 'exam-' + Date.now() });
+            document.getElementById('exam-subject').value = '';
+            document.getElementById('exam-date').value = '';
+            saveAll();
+            renderExams();
+        }
+
+        function renderExams() {
+            const list = document.getElementById('exams-list');
+            list.innerHTML = examsData.map(exam => {
+                const daysLeft = Math.ceil((new Date(exam.date) - new Date()) / (1000*60*60*24));
+                return `
+                    <div class="exam-item">
+                        <div class="exam-subject">${exam.subject}</div>
+                        <div class="exam-date">${exam.date}</div>
+                        <div class="exam-days-left">${daysLeft} أيام متبقية</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: ${Math.max(0, Math.min(100, (66-daysLeft)/66*100))}%"></div>
+                        </div>
+                        ${daysLeft > 0 ? `
+                            <div class="exam-prep-days">
+                                ${Array.from({length: Math.min(daysLeft, 5)}).map((_, i) => {
+                                    const prepDate = new Date();
+                                    prepDate.setDate(prepDate.getDate() + i);
+                                    return `<div class="prep-day">${prepDate.toLocaleDateString('ar-EG', {weekday: 'short'})}</div>`;
+                                }).join('')}
+                            </div>
+                        ` : ''}
+                        <span onclick="deleteExam('${exam.id}')" style="color:red; cursor:pointer; display:block; margin-top:10px; font-size:0.8rem;">حذف</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteExam(id) {
+            examsData = examsData.filter(e => e.id !== id);
+            saveAll();
+            renderExams();
+        }
+
+        // Initialize exams on load
+        function initializeExams() {
+            setTimeout(() => renderExams(), 500);
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeExams);
     </script>
 </body>
 </html>
