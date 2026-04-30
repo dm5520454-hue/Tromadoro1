@@ -17,15 +17,29 @@
     <meta name="author" content="Mazen">
 
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Tajawal:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo+Play:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Reem+Kufi:wght@400;700&family=Lemonada:wght@400;700&family=Marhey:wght@400;700&family=Rajdhani:wght@400;700&family=Oxanium:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
             --primary: #00ffcc; 
             --glass: rgba(15, 15, 15, 0.9); 
-            --border: rgba(0, 255, 204, 0.4); 
+            --border: rgba(0, 255, 204, 0.4);
+            --app-font: 'Tajawal', sans-serif;
+        }
+
+        *, *::before, *::after {
+            font-family: var(--app-font);
+        }
+
+        /* عناصر عندها خط ثابت مش بيتغير */
+        h1, .editable-time, .time-label, .lec-day-name, ._street_header, .mazen-sig {
+            font-family: 'Cinzel', serif;
+        }
+        ._street_planner_container *, ._street_grid * {
+            font-family: 'Permanent Marker', cursive;
         }
 
         body { 
-            background: #000; color: #e0e0e0; font-family: 'Tajawal', sans-serif; 
+            background: #000; color: #e0e0e0; font-family: var(--app-font); 
             margin: 0; padding-bottom: 120px; text-align: center; transition: 0.5s; 
             background-size: cover; background-position: center; background-attachment: fixed;
             background-image: radial-gradient(circle at center, #111 0%, #000 100%), url('https://www.transparenttextures.com/patterns/stardust.png');
@@ -84,19 +98,39 @@
         
         .day-box { border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: right; position: relative; direction: rtl; background: rgba(255,255,255,0.02); }
         
-        .floating-btn { position: fixed; padding: 12px 18px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 0.75rem; z-index: 1000; display: flex; align-items: center; gap: 6px; transition: 0.5s; }
-        .btn-contact { bottom: 100px; left: 15px; background: #0088cc; color: #fff; box-shadow: 0 0 10px #0088cc; animation: glow-blue 2s infinite; }
-        .btn-group { bottom: 100px; right: 15px; background: var(--primary); color: #000; box-shadow: 0 0 10px var(--primary); animation: glow-primary 2s infinite; }
-        .btn-camp { bottom: 160px; right: 15px; background: #ff3131; color: #fff; box-shadow: 0 0 10px #ff3131; animation: glow-red 2s infinite; }
-        
-        @keyframes glow-blue { 0%, 100% { box-shadow: 0 0 5px #0088cc; } 50% { box-shadow: 0 0 15px #0088cc; } }
-        @keyframes glow-primary { 0%, 100% { box-shadow: 0 0 5px var(--primary); } 50% { box-shadow: 0 0 15px var(--primary); } }
-        @keyframes glow-red { 0%, 100% { box-shadow: 0 0 5px #ff3131; } 50% { box-shadow: 0 0 15px #ff3131; } }
+        .floating-btn {
+            position: fixed; text-decoration: none; font-weight: 600;
+            font-size: 0.7rem; z-index: 1000; display: flex; align-items: center;
+            gap: 7px; transition: 0.3s; letter-spacing: 0.5px;
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            color: rgba(255,255,255,0.75);
+            padding: 10px 16px;
+        }
+        .floating-btn:hover {
+            background: rgba(255,255,255,0.09);
+            border-color: rgba(255,255,255,0.22);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+        .floating-btn svg { flex-shrink: 0; }
+        .btn-contact { bottom: 100px; left: 15px; }
+        .btn-group { bottom: 100px; right: 15px; }
+        .btn-camp { bottom: 160px; right: 15px; }
+        .floating-btn:hover { border-color: rgba(255,255,255,0.3); box-shadow: 0 4px 20px rgba(255,255,255,0.05); color: rgba(255,255,255,0.95); }
         
         .theme-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; display: inline-block; margin: 5px; vertical-align: middle; }
-        .navbar { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 18px 0; border-top: 1px solid var(--border); z-index: 1001; transition: 0.5s; }
-        .nav-item { color: #444; font-size: 1.6rem; cursor: pointer; }
-        .nav-item.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+        .navbar { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.97); display: flex; justify-content: space-around; align-items: center; padding: 10px 0 14px; border-top: 1px solid var(--border); z-index: 1001; transition: 0.5s; backdrop-filter: blur(20px); }
+        .nav-item { cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 8px; border-radius: 14px; transition: 0.3s; background: transparent; }
+        .nav-item svg { width: 20px; height: 20px; stroke: rgba(255,255,255,0.18); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: 0.3s; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6)); }
+        .nav-dot { width: 3px; height: 3px; border-radius: 50%; background: transparent; transition: 0.3s; }
+        .nav-item:hover svg { stroke: rgba(255,255,255,0.45); }
+        .nav-item.active { background: rgba(255,255,255,0.04); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.07); }
+        .nav-item.active svg { stroke: var(--primary); filter: drop-shadow(0 0 5px var(--primary)); }
+        .nav-item.active .nav-dot { background: var(--primary); box-shadow: 0 0 5px var(--primary); }
         .page { display: none; padding: 10px; animation: fadeIn 0.4s; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -266,7 +300,133 @@
         ._lec_log_save { background: var(--primary); color: #000; border: none; padding: 12px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; }
         /* ====================================================== */
 
-        /* ====== MIND MAP PAGE STYLES (ADDED) ====== */
+        /* ===== NEON GLOW STYLES (soft) ===== */
+        body.neon-green * { color: #7dffaa !important; text-shadow: 0 0 4px #4ddd8855; }
+        body.neon-green .glass-card, body.neon-green .azkar-item, body.neon-green .item-row, body.neon-green .mm-graph-node { border-color: #4ddd8866 !important; box-shadow: 0 0 6px #4ddd8822; }
+        body.neon-green .check-dot.completed, body.neon-green .mm-sub-check.done { background: #7dffaa !important; box-shadow: 0 0 6px #4ddd8844; }
+
+        body.neon-pink * { color: #ffaac8 !important; text-shadow: 0 0 4px #dd557755; }
+        body.neon-pink .glass-card, body.neon-pink .azkar-item, body.neon-pink .item-row, body.neon-pink .mm-graph-node { border-color: #dd557766 !important; box-shadow: 0 0 6px #dd557722; }
+        body.neon-pink .check-dot.completed, body.neon-pink .mm-sub-check.done { background: #ffaac8 !important; box-shadow: 0 0 6px #dd557744; }
+
+        body.neon-blue * { color: #99e6ff !important; text-shadow: 0 0 4px #44aad455; }
+        body.neon-blue .glass-card, body.neon-blue .azkar-item, body.neon-blue .item-row, body.neon-blue .mm-graph-node { border-color: #44aad466 !important; box-shadow: 0 0 6px #44aad422; }
+        body.neon-blue .check-dot.completed, body.neon-blue .mm-sub-check.done { background: #99e6ff !important; box-shadow: 0 0 6px #44aad444; }
+
+        body.neon-purple * { color: #d4a8ff !important; text-shadow: 0 0 4px #9955cc55; }
+        body.neon-purple .glass-card, body.neon-purple .azkar-item, body.neon-purple .item-row, body.neon-purple .mm-graph-node { border-color: #9955cc66 !important; box-shadow: 0 0 6px #9955cc22; }
+        body.neon-purple .check-dot.completed, body.neon-purple .mm-sub-check.done { background: #d4a8ff !important; box-shadow: 0 0 6px #9955cc44; }
+
+        body.neon-orange * { color: #ffd699 !important; text-shadow: 0 0 4px #cc880055; }
+        body.neon-orange .glass-card, body.neon-orange .azkar-item, body.neon-orange .item-row, body.neon-orange .mm-graph-node { border-color: #cc880066 !important; box-shadow: 0 0 6px #cc880022; }
+        body.neon-orange .check-dot.completed, body.neon-orange .mm-sub-check.done { background: #ffd699 !important; box-shadow: 0 0 6px #cc880044; }
+
+        .neon-btn {
+            border: 1px solid; padding: 10px 16px; border-radius: 12px; cursor: pointer;
+            font-size: 0.8rem; font-weight: bold; background: rgba(0,0,0,0.4);
+            transition: 0.3s; letter-spacing: 1px;
+        }
+        .neon-btn:hover { filter: brightness(1.2); transform: scale(1.04); }
+        .neon-btn.off  { color: #555; border-color: #333; text-shadow: none; box-shadow: none; }
+        /* ============================ */
+
+        /* ===== NOTES PAGE STYLES ===== */
+        #notes-page { direction: rtl; }
+        .notes-toolbar { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; }
+        .notes-search { flex:1; background:rgba(255,255,255,0.06); border:1px solid var(--border); color:#fff; padding:10px 14px; border-radius:12px; outline:none; font-family:var(--app-font); font-size:0.85rem; text-align:right; }
+        .notes-add-btn { background:var(--primary); color:#000; border:none; border-radius:12px; padding:10px 20px; font-weight:bold; font-size:1.2rem; cursor:pointer; flex-shrink:0; }
+        .notes-filter-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+        .notes-filter-btn { background:rgba(255,255,255,0.05); border:1px solid var(--border); color:#888; padding:5px 14px; border-radius:20px; font-size:0.75rem; cursor:pointer; transition:0.2s; }
+        .notes-filter-btn.active { background:var(--primary); color:#000; border-color:var(--primary); font-weight:bold; }
+        .notes-grid { columns: 2; gap: 12px; }
+        .note-card { break-inside: avoid; background:var(--glass); border:1px solid var(--border); border-radius:18px; padding:14px; margin-bottom:12px; cursor:pointer; transition:0.25s; display:flex; flex-direction:column; gap:8px; backdrop-filter:blur(20px); position:relative; }
+        .note-card:hover { border-color:var(--primary); box-shadow:0 0 16px rgba(0,255,204,0.12); transform:translateY(-2px); }
+        .note-card.pinned::before { content:'📌'; position:absolute; top:10px; left:10px; font-size:0.75rem; }
+        .note-card-top { display:flex; align-items:flex-start; gap:6px; }
+        .note-type-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
+        .note-title { flex:1; font-size:0.85rem; font-weight:bold; color:var(--primary); text-align:right; }
+        .note-preview { font-size:0.75rem; color:#777; line-height:1.6; text-align:right; overflow:hidden; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; }
+        .note-audio-bar { display:flex; align-items:center; gap:8px; background:rgba(0,255,204,0.05); border-radius:8px; padding:6px 10px; }
+        .note-play-btn { background:var(--primary); color:#000; border:none; border-radius:50%; width:26px; height:26px; font-size:0.7rem; cursor:pointer; flex-shrink:0; }
+        .note-footer { display:flex; justify-content:space-between; align-items:center; }
+        .note-date { font-size:0.62rem; color:#333; direction:ltr; }
+        .note-tag-badge { font-size:0.6rem; padding:2px 8px; border-radius:8px; font-weight:bold; background:rgba(0,255,204,0.1); color:var(--primary); border:1px solid var(--border); }
+        .note-del { color:#2a2a2a; font-size:1rem; cursor:pointer; transition:0.2s; background:none; border:none; }
+        .note-del:hover { color:red; }
+        .note-card-accent { height:3px; border-radius:3px; margin-bottom:2px; }
+
+        /* Notes Modal */
+        .notes-modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.96); z-index:4000; display:none; flex-direction:column; padding:16px; box-sizing:border-box; direction:rtl; }
+        .notes-modal.open { display:flex; animation:fadeIn 0.2s; }
+        .notes-modal-inner { background:#0a0a0a; border:1px solid var(--border); border-radius:22px; flex:1; display:flex; flex-direction:column; padding:16px; gap:12px; overflow:hidden; }
+        .notes-modal-header { display:flex; align-items:center; gap:10px; }
+        .notes-modal-titlein { flex:1; background:none; border:none; border-bottom:1px solid var(--border); color:var(--primary); font-size:1rem; font-weight:bold; padding:6px 2px; outline:none; font-family:var(--app-font); text-align:right; }
+        .notes-modal-close { color:red; font-size:1.4rem; cursor:pointer; background:none; border:none; flex-shrink:0; }
+        .notes-modal-tabs { display:flex; gap:8px; }
+        .notes-modal-tab { flex:1; padding:9px; border-radius:10px; border:1px solid var(--border); background:rgba(255,255,255,0.04); color:#666; cursor:pointer; font-size:0.8rem; font-family:var(--app-font); transition:0.2s; }
+        .notes-modal-tab.active { background:var(--primary); color:#000; font-weight:bold; border-color:var(--primary); }
+        .notes-modal-body { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:12px; }
+        .notes-textarea { flex:1; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:14px; color:#ddd; padding:14px; font-family:var(--app-font); font-size:0.9rem; line-height:1.8; outline:none; resize:none; text-align:right; min-height:180px; width:100%; box-sizing:border-box; }
+        .notes-tag-in { background:rgba(255,255,255,0.05); border:1px solid var(--border); color:#fff; padding:9px 12px; border-radius:10px; outline:none; font-family:var(--app-font); font-size:0.8rem; text-align:right; width:100%; box-sizing:border-box; }
+        .notes-color-row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+        .nc-dot { width:24px; height:24px; border-radius:50%; cursor:pointer; border:2px solid transparent; transition:0.2s; flex-shrink:0; }
+        .nc-dot.sel { border-color:#fff; transform:scale(1.25); }
+        .notes-rec-area { display:flex; flex-direction:column; align-items:center; gap:16px; padding:24px 0; }
+        .notes-rec-btn { width:72px; height:72px; border-radius:50%; border:3px solid var(--primary); background:rgba(0,255,204,0.07); color:var(--primary); font-size:2rem; cursor:pointer; transition:0.3s; }
+        .notes-rec-btn.rec { border-color:red; color:red; background:rgba(255,0,0,0.1); animation:pulse 1s infinite; }
+        .notes-rec-status { font-size:0.8rem; color:#555; }
+        .notes-audio-el { width:100%; border-radius:10px; }
+        .notes-save-btn { background:var(--primary); color:#000; border:none; border-radius:14px; padding:14px; font-weight:bold; cursor:pointer; font-family:var(--app-font); font-size:0.95rem; margin-top:auto; }
+        .notes-empty { text-align:center; color:#252525; font-size:0.85rem; margin-top:60px; line-height:2.8; }
+        /* ============================= */
+
+        /* === SIDE DRAWER === */
+        #side-drawer-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.55); z-index: 1999;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+            backdrop-filter: blur(4px);
+        }
+        #side-drawer-overlay.open { opacity: 1; pointer-events: all; }
+        #side-drawer {
+            position: fixed; top: 0; right: -230px; width: 230px; height: 100%;
+            background: rgba(8,8,8,0.98); backdrop-filter: blur(30px);
+            border-left: 1px solid var(--border); z-index: 2000;
+            transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
+            padding: 55px 0 120px; box-sizing: border-box;
+            overflow-y: auto; display: flex; flex-direction: column; gap: 2px;
+            box-shadow: -10px 0 40px rgba(0,0,0,0.8);
+        }
+        #side-drawer.open { right: 0; }
+        #drawer-pull-tab {
+            position: fixed; top: 50%; right: 0;
+            transform: translateY(-50%);
+            width: 16px; height: 56px;
+            background: var(--primary);
+            border-radius: 8px 0 0 8px; z-index: 1998; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: -4px 0 18px rgba(0,255,204,0.35);
+            transition: right 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s;
+        }
+        #drawer-pull-tab.open { right: 230px; box-shadow: -2px 0 10px rgba(0,255,204,0.15); }
+        #drawer-pull-tab svg { width: 9px; height: 16px; stroke: #000; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .drawer-section-title { font-size: 0.6rem; color: rgba(255,255,255,0.2); letter-spacing: 2px; text-transform: uppercase; padding: 12px 20px 6px; direction: rtl; }
+        .drawer-nav-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 13px 20px; cursor: pointer; transition: 0.22s;
+            border-right: 3px solid transparent; direction: rtl;
+            position: relative;
+        }
+        .drawer-nav-item:active { transform: scale(0.97); }
+        .drawer-nav-item:hover { background: rgba(255,255,255,0.05); border-right-color: var(--border); }
+        .drawer-nav-item.active { background: rgba(0,255,204,0.06); border-right-color: var(--primary); }
+        .drawer-nav-item svg { width: 20px; height: 20px; stroke: rgba(255,255,255,0.35); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; transition: 0.22s; }
+        .drawer-nav-item.active svg { stroke: var(--primary); filter: drop-shadow(0 0 6px var(--primary)); }
+        .drawer-nav-label { font-size: 0.88rem; color: rgba(255,255,255,0.55); transition: 0.22s; font-family: var(--app-font); }
+        .drawer-nav-item.active .drawer-nav-label { color: var(--primary); font-weight: bold; }
+        .drawer-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 8px 16px; }
+        /* =================== */
+
         #mindmap-page { direction: rtl; }
         .mm-header-row { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
         .mm-main-input { flex: 1; background: rgba(255,255,255,0.07); border: 1px solid var(--border); color: #fff; padding: 12px 15px; border-radius: 15px; font-size: 1rem; outline: none; font-family: 'Tajawal'; text-align: right; }
@@ -300,9 +460,18 @@
     
     <audio id="alarm" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
     
-    <a href="https://t.me/Death6is" target="_blank" class="floating-btn btn-contact">👤 كلم مازن</a>
-    <a href="https://t.me/+R6hvECiujXsyN2U0" target="_blank" class="floating-btn btn-group">🚀 الجروب</a>
-    <a href="https://t.me/+3XfKN-fG130wZWRk" target="_blank" class="floating-btn btn-camp">🎯 معسكر متابعة المنهج والمراجعات</a>
+    <a href="https://t.me/Death6is" target="_blank" class="floating-btn btn-contact">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        كلم مازن
+    </a>
+    <a href="https://t.me/+R6hvECiujXsyN2U0" target="_blank" class="floating-btn btn-group">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        الجروب
+    </a>
+    <a href="https://t.me/+3XfKN-fG130wZWRk" target="_blank" class="floating-btn btn-camp">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        جروب التحديات
+    </a>
 
     <div id="muslim-page" class="page active">
         <h1>زاد المسلم 🕋</h1>
@@ -427,6 +596,18 @@
             </p>
         </div>
 
+        <div style="margin: 20px 0 10px; text-align:center; font-family:'Cinzel',serif;">
+            <p style="font-size:0.55rem; letter-spacing:3px; color:#333; margin-bottom:5px;">DEVELOPED BY</p>
+            <a href="https://t.me/Death6is" target="_blank" style="text-decoration:none;">
+                <span class="mazen-sig" style="color:var(--primary); font-size:1.1rem; letter-spacing:5px; font-weight:bold;">MAZEN</span>
+            </a>
+            <br>
+            <a href="https://t.me/Death6is" target="_blank" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 14px;border:1px solid var(--border);border-radius:20px;color:var(--primary);text-decoration:none;font-size:0.6rem;font-family:'Tajawal',sans-serif;letter-spacing:1px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                @Death6is
+            </a>
+        </div>
+
         <div class="glass-card">
             <p style="font-size:0.8rem; margin-bottom:12px;">المظهر والتخصيص 🎨</p>
             <div class="theme-btn" style="background: #00ffcc;" onclick="setTheme('')"></div>
@@ -437,12 +618,46 @@
             <div class="color-picker" onclick="document.getElementById('custom-color').click()" title="تغيير ألوان التطبيق"></div>
             <label class="upload-label">🖼️ صورة خلفية ثابتة<input type="file" id="bg-input" accept="image/*" onchange="uploadBg(this)" style="display:none"></label>
             <button onclick="clearBg()" style="background:none; border:none; color:red; font-size:0.7rem; margin-top:5px; cursor:pointer">إزالة الخلفية</button>
+
+            <div style="margin-top:18px; border-top:1px solid var(--border); padding-top:15px;">
+                <p style="font-size:0.8rem; margin-bottom:12px; color:var(--primary);">الخط 🔤</p>
+                <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;">
+                    <button data-font="Tajawal" class="font-btn" onclick="setAppFont('Tajawal')" style="font-family:'Tajawal'; background:rgba(255,255,255,0.07); border:1px solid var(--border); color:#fff; padding:8px 14px; border-radius:12px; cursor:pointer; font-size:0.85rem;">Tajawal</button>
+                    <button data-font="Cairo Play" class="font-btn" onclick="setAppFont('Cairo Play')" style="font-family:'Cairo Play'; background:rgba(255,255,255,0.07); border:1px solid var(--border); color:#fff; padding:8px 14px; border-radius:12px; cursor:pointer; font-size:0.85rem;">Cairo Play</button>
+                    <button data-font="Noto Naskh Arabic" class="font-btn" onclick="setAppFont('Noto Naskh Arabic')" style="font-family:'Noto Naskh Arabic'; background:rgba(255,255,255,0.07); border:1px solid var(--border); color:#fff; padding:8px 14px; border-radius:12px; cursor:pointer; font-size:0.85rem;">Noto Naskh</button>
+                    <button data-font="Reem Kufi" class="font-btn" onclick="setAppFont('Reem Kufi')" style="font-family:'Reem Kufi'; background:rgba(255,255,255,0.07); border:1px solid var(--border); color:#fff; padding:8px 14px; border-radius:12px; cursor:pointer; font-size:0.85rem;">Reem Kufi</button>
+                    <button data-font="Lemonada" class="font-btn" onclick="setAppFont('Lemonada')" style="font-family:'Lemonada'; background:rgba(255,255,255,0.07); border:1px solid var(--border); color:#fff; padding:8px 14px; border-radius:12px; cursor:pointer; font-size:0.85rem;">Lemonada</button>
+                    <button data-font="Marhey" class="font-btn" onclick="setAppFont('Marhey')" style="font-family:'Marhey'; background:rgba(255,255,255,0.07); border:1px solid var(--border); color:#fff; padding:8px 14px; border-radius:12px; cursor:pointer; font-size:0.85rem;">Marhey</button>
+                    <button data-font="Permanent Marker" class="font-btn" onclick="setAppFont('Permanent Marker')" style="font-family:'Permanent Marker'; background:rgba(255,255,255,0.07); border:1px solid var(--border); color:var(--primary); padding:8px 14px; border-radius:12px; cursor:pointer; font-size:0.85rem; text-shadow:0 0 8px var(--primary);">Permanent Marker ✍️</button>
+                    <button data-font="Orbitron" class="font-btn" onclick="setAppFont('Orbitron')" style="font-family:'Orbitron'; background:rgba(255,255,255,0.07); border:1px solid var(--border); color:var(--primary); padding:8px 14px; border-radius:12px; cursor:pointer; font-size:0.75rem; text-shadow:0 0 8px var(--primary);">Orbitron</button>
+                    <button data-font="Oxanium" class="font-btn" onclick="setAppFont('Oxanium')" style="font-family:'Oxanium'; background:rgba(255,255,255,0.07); border:1px solid var(--border); color:var(--primary); padding:8px 14px; border-radius:12px; cursor:pointer; font-size:0.75rem; text-shadow:0 0 8px var(--primary);">Oxanium</button>
+                    <button data-font="Rajdhani" class="font-btn" onclick="setAppFont('Rajdhani')" style="font-family:'Rajdhani'; background:rgba(255,255,255,0.07); border:1px solid var(--border); color:var(--primary); padding:8px 14px; border-radius:12px; cursor:pointer; font-size:0.85rem; text-shadow:0 0 8px var(--primary);">Rajdhani</button>
+                </div>
+            </div>
+
+            <div style="margin-top:18px; border-top:1px solid var(--border); padding-top:15px;">
+                <p style="font-size:0.8rem; margin-bottom:12px; color:var(--primary);">وضع النيون 💡</p>
+                <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;">
+                    <button class="neon-btn off" onclick="setNeon('')"     style="color:#555; border-color:#333;">Off ○</button>
+                    <button class="neon-btn" onclick="setNeon('neon-green')"  style="color:#7dffaa; border-color:#4ddd8866; text-shadow:0 0 5px #4ddd8866; box-shadow:0 0 5px #4ddd8822;">Green</button>
+                    <button class="neon-btn" onclick="setNeon('neon-pink')"   style="color:#ffaac8; border-color:#dd557766; text-shadow:0 0 5px #dd557766; box-shadow:0 0 5px #dd557722;">Pink</button>
+                    <button class="neon-btn" onclick="setNeon('neon-blue')"   style="color:#99e6ff; border-color:#44aad466; text-shadow:0 0 5px #44aad466; box-shadow:0 0 5px #44aad422;">Blue</button>
+                    <button class="neon-btn" onclick="setNeon('neon-purple')" style="color:#d4a8ff; border-color:#9955cc66; text-shadow:0 0 5px #9955cc66; box-shadow:0 0 5px #9955cc22;">Purple</button>
+                    <button class="neon-btn" onclick="setNeon('neon-orange')" style="color:#ffd699; border-color:#cc880066; text-shadow:0 0 5px #cc880066; box-shadow:0 0 5px #cc880022;">Amber</button>
+                </div>
+            </div>
         </div>
 
-        <div style="margin-top: 30px; opacity: 0.6; font-family: 'Cinzel', serif;">
-            <p style="font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 5px;">CRAFTED BY</p>
-            <h3 class="mazen-sig" style="color: var(--primary); margin: 0; font-size: 1.2rem;">STUDENT ⚕️</h3>
-            <p style="font-size: 0.6rem; color: gray; margin-top: 5px;">Road to University 2026</p>
+        <div style="margin-top: 30px; opacity: 0.75; font-family: 'Cinzel', serif; text-align:center;">
+            <p style="font-size: 0.6rem; letter-spacing: 3px; margin-bottom: 6px; color:#555;">DEVELOPED BY</p>
+            <a href="https://t.me/Death6is" target="_blank" style="text-decoration:none;">
+                <h3 class="mazen-sig" style="color: var(--primary); margin: 0; font-size: 1.3rem; letter-spacing:4px;">MAZEN</h3>
+            </a>
+            <p style="font-size: 0.55rem; color: #444; margin-top: 6px; letter-spacing:2px;">ROAD TO UNIVERSITY 2026</p>
+            <a href="https://t.me/Death6is" target="_blank" style="display:inline-flex; align-items:center; gap:5px; margin-top:10px; padding:6px 16px; border:1px solid var(--border); border-radius:20px; color:var(--primary); text-decoration:none; font-size:0.65rem; letter-spacing:1px; transition:0.3s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                @Death6is
+            </a>
         </div>
     </div>
 
@@ -530,15 +745,15 @@
     </div>
 
     <div id="exam-planning-page" class="page">
-        <h1>التخطيط للامتحانات 🎓</h1>
+        <h1>Deadlines ⏳</h1>
         <div class="glass-card">
             <div style="text-align: right; margin-bottom: 15px; font-size: 0.9rem; color: #888;">
-                أضف امتحاناتك هنا، والتطبيق سيقترح عليك أيام المراجعة المثالية
+                أضف مواعيدك النهائية هنا، والتطبيق سيقترح عليك أيام المراجعة المثالية
             </div>
             <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
-                <input type="text" id="exam-subject" placeholder="اسم المادة/الامتحان" class="time-input">
+                <input type="text" id="exam-subject" placeholder="اسم الموعد النهائي" class="time-input">
                 <input type="date" id="exam-date" class="time-input">
-                <button onclick="addExam()" style="background: var(--primary); border: none; border-radius: 10px; padding: 12px; font-weight: bold; color: #000;">+ إضافة امتحان</button>
+                <button onclick="addExam()" style="background: var(--primary); border: none; border-radius: 10px; padding: 12px; font-weight: bold; color: #000;">+ إضافة Deadline</button>
             </div>
             <div class="exam-timeline" id="exams-list"></div>
         </div>
@@ -584,6 +799,53 @@
         </div>
     </div>
 
+    <!-- ====== NOTES PAGE ====== -->
+    <div id="notes-page" class="page">
+        <h1>الملاحظات 📝</h1>
+        <div class="notes-toolbar">
+            <input type="text" id="notes-search-in" class="notes-search" placeholder="ابحث في ملاحظاتك..." oninput="notesRender()">
+            <button class="notes-add-btn" onclick="notesOpenModal()">+</button>
+        </div>
+        <div class="notes-filter-row" id="notes-filter-row">
+            <button class="notes-filter-btn active" data-filter="all"   onclick="notesSetFilter('all',this)">الكل</button>
+            <button class="notes-filter-btn"        data-filter="text"  onclick="notesSetFilter('text',this)">📝 نصية</button>
+            <button class="notes-filter-btn"        data-filter="audio" onclick="notesSetFilter('audio',this)">🎙️ صوتية</button>
+            <button class="notes-filter-btn"        data-filter="pin"   onclick="notesSetFilter('pin',this)">📌 مثبتة</button>
+            <button class="notes-filter-btn" style="border-style:dashed; color:var(--primary);" onclick="notesAddCategory()">＋ قسم</button>
+        </div>
+        <div class="notes-grid" id="notes-grid">
+            <div class="notes-empty" id="notes-empty">
+                <div style="font-size:2.5rem">📝</div>
+                <div>لا توجد ملاحظات بعد</div>
+                <div style="font-size:0.72rem;color:#1a1a1a">اضغط + لإضافة ملاحظة جديدة</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notes Modal -->
+    <div class="notes-modal" id="notes-modal">
+        <div class="notes-modal-inner">
+            <div class="notes-modal-header">
+                <button class="notes-modal-close" onclick="notesCloseModal()">✕</button>
+                <input type="text" class="notes-modal-titlein" id="note-title-in" placeholder="عنوان الملاحظة...">
+            </div>
+            <div class="notes-modal-tabs">
+                <button class="notes-modal-tab active" onclick="notesSwitchTab('text',this)">📝 نص</button>
+                <button class="notes-modal-tab"        onclick="notesSwitchTab('audio',this)">🎙️ صوتية</button>
+            </div>
+            <div class="notes-modal-body" id="notes-modal-body">
+                <!-- filled by JS -->
+            </div>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                <input type="text" class="notes-tag-in" id="note-tag-in" placeholder="تاج: فيزياء، فكرة، مشروع..." style="flex:1; min-width:120px;">
+                <select id="note-cat-in" class="notes-tag-in" style="flex:0.8; min-width:100px;"></select>
+                <div class="notes-color-row" id="note-color-row"></div>
+            </div>
+            <button class="notes-save-btn" onclick="notesSave()">💾 حفظ</button>
+        </div>
+    </div>
+    <!-- ========================= -->
+
     <!-- ====== MIND MAP PAGE (ADDED) ====== -->
     <div id="mindmap-page" class="page">
         <h1>خريطة المهام 🗺️</h1>
@@ -605,16 +867,57 @@
     <!-- ====================================== -->
 
     <nav class="navbar">
-        <div class="nav-item active" onclick="showP('muslim-page', this)">🕋</div>
-        <div class="nav-item" onclick="showP('home', this)">⏳</div>
-        <div class="nav-item" onclick="showP('lectures-page', this)">🎙️</div>
-        <div class="nav-item" onclick="showP('tasks', this)">✅</div>
-        <div class="nav-item" onclick="showP('weekly-street-page', this)">📑</div> 
-        <div class="nav-item" onclick="showP('time-block', this)">⏱️</div>
-        <div class="nav-item" onclick="showP('schedule', this)">📅</div>
-        <div class="nav-item" onclick="showP('exam-planning-page', this)">🎓</div>
-        <div class="nav-item" onclick="showP('mindmap-page', this)">🗺️</div>
+        <div class="nav-item active" onclick="showP('muslim-page', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C10 2 8 3.5 8 5.5c0 1 .4 2 1 2.7V9H7l-1 2h1v9h8v-9h1l-1-2h-2V8.2c.6-.7 1-1.7 1-2.7C14 3.5 14 2 12 2z"/><path d="M3 11h2v9H3zM19 11h2v9h-2z"/><line x1="3" y1="20" x2="21" y2="20"/></svg>
+            <div class="nav-dot"></div>
+        </div>
+        <div class="nav-item" onclick="showP('home', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><polyline points="12 9 12 13 15 15"/><path d="M9 2h6M12 2v3"/></svg>
+            <div class="nav-dot"></div>
+        </div>
+        <div class="nav-item" onclick="showP('lectures-page', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            <div class="nav-dot"></div>
+        </div>
+        <div class="nav-item" onclick="showP('tasks', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <div class="nav-dot"></div>
+        </div>
+        <div class="nav-item" onclick="showP('weekly-street-page', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <div class="nav-dot"></div>
+        </div>
+        <div class="nav-item" onclick="showP('time-block', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            <div class="nav-dot"></div>
+        </div>
+        <div class="nav-item" onclick="showP('schedule', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <div class="nav-dot"></div>
+        </div>
+        <div class="nav-item" onclick="showP('exam-planning-page', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            <div class="nav-dot"></div>
+        </div>
+        <div class="nav-item" onclick="showP('mindmap-page', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="3" cy="6" r="2"/><circle cx="21" cy="6" r="2"/><circle cx="3" cy="18" r="2"/><circle cx="21" cy="18" r="2"/><line x1="5" y1="6" x2="9" y2="11"/><line x1="19" y1="6" x2="15" y2="11"/><line x1="5" y1="18" x2="9" y2="13"/><line x1="19" y1="18" x2="15" y2="13"/></svg>
+            <div class="nav-dot"></div>
+        </div>
+        <div class="nav-item" onclick="showP('notes-page', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            <div class="nav-dot"></div>
+        </div>
     </nav>
+
+    <!-- === SIDE DRAWER === -->
+    <div id="side-drawer-overlay" onclick="closeDrawer()"></div>
+    <div id="drawer-pull-tab" onclick="toggleDrawer()">
+        <svg viewBox="0 0 9 16"><polyline points="7 1 2 8 7 15"/></svg>
+    </div>
+    <div id="side-drawer">
+        <div class="drawer-section-title">الصفحات</div>
+    </div>
+    <!-- =================== -->
 
     <script>
         function initPWA() {
@@ -721,6 +1024,16 @@
             document.getElementById('completed-sessions').innerText = completedSessions;
             document.getElementById('daily-goal-input').value = data.dailyGoal || 0;
             document.body.className = data.theme || '';
+            var savedFont = localStorage.getItem('tromadoro_font');
+            if (savedFont) { document.documentElement.style.setProperty('--app-font', "'" + savedFont + "', 'Tajawal', sans-serif"); }
+            var savedNeon = localStorage.getItem('tromadoro_neon');
+            if (savedNeon) { document.body.classList.add(savedNeon); }
+            // رجّع اللون المخصص — لازم يكون بعد setTheme عشان ياخد أولوية
+            var savedColor = localStorage.getItem('tromadoro_custom_color');
+            if (savedColor) {
+                document.documentElement.style.setProperty('--primary', savedColor);
+                document.documentElement.style.setProperty('--border', savedColor + '66');
+            }
             loadBg(); 
             updateAllProgress();
             renderExams();
@@ -778,7 +1091,28 @@
         function uploadBg(input) { const file = input.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { const imgData = e.target.result; document.body.style.backgroundImage = `url('${imgData}')`; const request = indexedDB.open("TromadoroDB", 1); request.onupgradeneeded = (ev) => ev.target.result.createObjectStore("settings"); request.onsuccess = (ev) => { ev.target.result.transaction("settings", "readwrite").objectStore("settings").put(imgData, "bgImage"); }; }; reader.readAsDataURL(file); }
         function loadBg() { const request = indexedDB.open("TromadoroDB", 1); request.onupgradeneeded = (ev) => ev.target.result.createObjectStore("settings"); request.onsuccess = (ev) => { ev.target.result.transaction("settings").objectStore("settings").get("bgImage").onsuccess = (e) => { if (e.target.result) document.body.style.backgroundImage = `url('${e.target.result}')`; }; }; }
         function clearBg() { document.body.style.backgroundImage = 'radial-gradient(circle at center, #111 0%, #000 100%), url("https://www.transparenttextures.com/patterns/stardust.png")'; indexedDB.open("TromadoroDB", 1).onsuccess = (ev) => { ev.target.result.transaction("settings", "readwrite").objectStore("settings").delete("bgImage"); }; }
-        function setCustomColor(color) { document.documentElement.style.setProperty('--primary', color); document.documentElement.style.setProperty('--border', color + '66'); saveAll(); }
+        function setCustomColor(color) {
+            document.documentElement.style.setProperty('--primary', color);
+            document.documentElement.style.setProperty('--border', color + '66');
+            localStorage.setItem('tromadoro_custom_color', color);
+            // امسح preset theme عشان اللون المخصص ياخد أولوية
+            var neon = Array.from(document.body.classList).find(function(c){ return c.indexOf('neon') === 0; });
+            document.body.className = neon || '';
+            saveAll();
+        }
+        function setAppFont(fontName) { 
+            document.documentElement.style.setProperty('--app-font', "'" + fontName + "', 'Tajawal', sans-serif");
+            localStorage.setItem('tromadoro_font', fontName);
+            document.querySelectorAll('.font-btn').forEach(function(b){ b.style.borderColor = ''; b.style.color = ''; });
+            var active = document.querySelector('.font-btn[data-font="' + fontName + '"]');
+            if (active) { active.style.borderColor = 'var(--primary)'; active.style.color = 'var(--primary)'; }
+        }
+        function setNeon(neonClass) {
+            var neons = ['neon-green','neon-pink','neon-blue','neon-purple','neon-orange'];
+            neons.forEach(function(c){ document.body.classList.remove(c); });
+            if (neonClass) document.body.classList.add(neonClass);
+            localStorage.setItem('tromadoro_neon', neonClass);
+        }
         function showTeachers(subj) { document.getElementById('subject-list').style.display = 'none'; document.getElementById('teacher-view').style.display = 'block'; document.getElementById('subj-title').innerText = subj; const container = document.getElementById('teachers-container'); container.innerHTML = ""; teachersData[subj].forEach((name, index) => { const div = document.createElement('div'); div.className = 'teacher-row'; div.innerHTML = `<span>${name}</span> <span class="rank-tag">TOP #${index + 1}</span>`; container.appendChild(div); }); }
         function hideTeachers() { document.getElementById('subject-list').style.display = 'block'; document.getElementById('teacher-view').style.display = 'none'; }
         function showP(id, el) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); }
@@ -878,7 +1212,19 @@
         function addTimeBlock() { const timeIn = document.getElementById('block-time'), descIn = document.getElementById('block-desc'); if (!timeIn.value || !descIn.value) return; renderBlockRow(convertTo12Hour(timeIn.value), descIn.value, false); descIn.value = ""; saveAll(); updateProgress('block-list', 'blocks-progress'); }
         function addDay() { const dayId = 'day-' + Date.now(); renderDayBox('اسم اليوم...', dayId, []); saveAll(); updateScheduleProgress(); }
         function addSubTask(containerId) { const container = document.getElementById(containerId), taskRow = document.createElement('div'); taskRow.className = 'item-row'; taskRow.style.margin = "5px 0"; taskRow.innerHTML = `<div class="check-dot" onclick="handleCheckClick(this)"></div><div class="task-text" contenteditable="true" oninput="saveAll()"></div><div onclick="this.parentElement.remove(); saveAll(); updateScheduleProgress()" style="color:red; cursor:pointer; font-size:0.8rem">×</div>`; container.appendChild(taskRow); saveAll(); updateScheduleProgress(); }
-        function setTheme(cls) { document.body.className = cls; if (cls === '') setCustomColor('#00ffcc'); else if (cls === 'dark-red') setCustomColor('#ff3131'); else if (cls === 'dark-blue') setCustomColor('#00d2ff'); else if (cls === 'dark-purple') setCustomColor('#bc13fe'); saveAll(); }
+        function setTheme(cls) {
+            var neon = Array.from(document.body.classList).find(function(c){ return c.indexOf('neon') === 0; });
+            document.body.className = (cls ? cls + ' ' : '') + (neon || '');
+            document.body.className = document.body.className.trim();
+            var color = '#00ffcc';
+            if (cls === 'dark-red') color = '#ff3131';
+            else if (cls === 'dark-blue') color = '#00d2ff';
+            else if (cls === 'dark-purple') color = '#bc13fe';
+            document.documentElement.style.setProperty('--primary', color);
+            document.documentElement.style.setProperty('--border', color + '66');
+            localStorage.setItem('tromadoro_custom_color', color);
+            saveAll();
+        }
 
         /* --- FINAL EXAM MODULE LOGIC --- */
         let _final_exam_current_day = null;
@@ -1124,6 +1470,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', initializeExams);
+        document.addEventListener('DOMContentLoaded', function() { var f = localStorage.getItem('tromadoro_font'); if (f) document.body.style.fontFamily = "'" + f + "', 'Tajawal', sans-serif"; });
 
         /* ====== MIND MAP JS (ADDED) ====== */
         let mmData = [];
@@ -1316,7 +1663,562 @@
         }
 
         document.addEventListener('DOMContentLoaded', mmInit);
-        /* ================================== */
+
+        /* ====== NOTES PAGE JS ====== */
+        var notesData = [];
+        var notesCategories = [];
+        var notesFilter = 'all';
+        var notesEditId = null;
+        var notesCurrentTab = 'text';
+        var notesMediaRecorder = null;
+        var notesAudioChunks = [];
+        var notesAudioBlob = null;
+        var notesAudioURL = null;
+        var notesColors = ['#00ffcc','#ff2d78','#00cfff','#bf5fff','#ff9500','#39ff14','#fff','#ff6b6b'];
+        var notesSelectedColor = '#00ffcc';
+        var notesRecInterval = null;
+
+        function notesSave_storage() {
+            localStorage.setItem('tromadoro_notes', JSON.stringify(notesData));
+            localStorage.setItem('tromadoro_notes_cats', JSON.stringify(notesCategories));
+        }
+        function notesLoad_storage() {
+            var r = localStorage.getItem('tromadoro_notes');
+            if(r) notesData = JSON.parse(r);
+            var c = localStorage.getItem('tromadoro_notes_cats');
+            if(c) notesCategories = JSON.parse(c);
+        }
+
+        function notesAddCategory() {
+            var name = prompt('اسم القسم الجديد:');
+            if (!name || !name.trim()) return;
+            name = name.trim();
+            if (notesCategories.indexOf(name) >= 0) return;
+            notesCategories.push(name);
+            notesSave_storage();
+            notesRebuildFilterRow();
+        }
+
+        function notesDeleteCategory(name) {
+            notesCategories = notesCategories.filter(function(c){ return c !== name; });
+            notesData.forEach(function(n){ if(n.category === name) n.category = ''; });
+            notesSave_storage();
+            if (notesFilter === 'cat:' + name) notesFilter = 'all';
+            notesRebuildFilterRow();
+            notesRender();
+        }
+
+        function notesRebuildFilterRow() {
+            var row = document.getElementById('notes-filter-row');
+            if (!row) return;
+            row.innerHTML = '';
+            var fixed = [
+                {f:'all', label:'الكل'},
+                {f:'text', label:'📝 نصية'},
+                {f:'audio', label:'🎙️ صوتية'},
+                {f:'pin', label:'📌 مثبتة'}
+            ];
+            fixed.forEach(function(item) {
+                var btn = document.createElement('button');
+                btn.className = 'notes-filter-btn' + (notesFilter === item.f ? ' active' : '');
+                btn.innerText = item.label;
+                btn.onclick = (function(f,b){ return function(){ notesSetFilter(f,b); }; })(item.f, btn);
+                row.appendChild(btn);
+            });
+            notesCategories.forEach(function(cat) {
+                var wrap = document.createElement('span');
+                wrap.style.cssText = 'display:inline-flex;align-items:center;gap:3px;';
+                var btn = document.createElement('button');
+                btn.className = 'notes-filter-btn' + (notesFilter === 'cat:'+cat ? ' active' : '');
+                btn.innerText = '🗂 ' + cat;
+                btn.onclick = (function(c,b){ return function(){ notesSetFilter('cat:'+c,b); }; })(cat, btn);
+                var del = document.createElement('span');
+                del.innerText = '×';
+                del.style.cssText = 'color:#444;cursor:pointer;font-size:0.9rem;padding:0 2px;';
+                del.title = 'حذف القسم';
+                del.onclick = (function(c){ return function(e){ e.stopPropagation(); if(confirm('حذف قسم "'+c+'"؟')){ notesDeleteCategory(c); } }; })(cat);
+                wrap.appendChild(btn);
+                wrap.appendChild(del);
+                row.appendChild(wrap);
+            });
+            var addBtn = document.createElement('button');
+            addBtn.className = 'notes-filter-btn';
+            addBtn.style.cssText = 'border-style:dashed;color:var(--primary);';
+            addBtn.innerText = '＋ قسم';
+            addBtn.onclick = notesAddCategory;
+            row.appendChild(addBtn);
+
+            // rebuild category select in modal if open
+            notesBuildCatSelect();
+        }
+
+        function notesBuildCatSelect() {
+            var sel = document.getElementById('note-cat-in');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">بدون قسم</option>';
+            notesCategories.forEach(function(c) {
+                var opt = document.createElement('option');
+                opt.value = c; opt.innerText = c;
+                sel.appendChild(opt);
+            });
+        }
+
+        function notesOpenModal(editId) {
+            notesEditId = editId || null;
+            notesAudioBlob = null; notesAudioURL = null; notesAudioChunks = [];
+            document.getElementById('notes-modal').classList.add('open');
+            document.getElementById('note-title-in').value = '';
+            document.getElementById('note-tag-in').value = '';
+            notesSelectedColor = '#00ffcc';
+            notesCurrentTab = 'text';
+            notesBuildColorRow();
+            notesBuildCatSelect();
+            notesSwitchTab('text', document.querySelector('.notes-modal-tab'));
+            if (editId) {
+                var n = notesData.find(function(x){ return x.id === editId; });
+                if (!n) return;
+                document.getElementById('note-title-in').value = n.title;
+                document.getElementById('note-tag-in').value = n.tag || '';
+                var sel = document.getElementById('note-cat-in');
+                if(sel) sel.value = n.category || '';
+                notesSelectedColor = n.color || '#00ffcc';
+                notesBuildColorRow();
+                if (n.type === 'audio') {
+                    notesAudioURL = n.audio;
+                    notesSwitchTab('audio', document.querySelectorAll('.notes-modal-tab')[1]);
+                } else {
+                    notesSwitchTab('text', document.querySelectorAll('.notes-modal-tab')[0]);
+                    setTimeout(function(){
+                        var ta = document.getElementById('notes-textarea-el');
+                        if(ta) ta.value = n.content || '';
+                    }, 30);
+                }
+            }
+        }
+
+        function notesCloseModal() {
+            document.getElementById('notes-modal').classList.remove('open');
+            if (notesMediaRecorder && notesMediaRecorder.state === 'recording') notesMediaRecorder.stop();
+        }
+
+        function notesBuildColorRow() {
+            var row = document.getElementById('note-color-row');
+            if(!row) return;
+            row.innerHTML = '';
+            notesColors.forEach(function(c) {
+                var d = document.createElement('div');
+                d.className = 'nc-dot' + (c === notesSelectedColor ? ' sel' : '');
+                d.style.background = c;
+                d.onclick = function() { notesSelectedColor = c; notesBuildColorRow(); };
+                row.appendChild(d);
+            });
+        }
+
+        function notesSwitchTab(tab, el) {
+            notesCurrentTab = tab;
+            document.querySelectorAll('.notes-modal-tab').forEach(function(b){ b.classList.remove('active'); });
+            if (el) el.classList.add('active');
+            var body = document.getElementById('notes-modal-body');
+            if (tab === 'text') {
+                body.innerHTML = '<textarea class="notes-textarea" id="notes-textarea-el" placeholder="اكتب ملاحظتك هنا..."></textarea>';
+            } else {
+                notesBuildAudioTab();
+            }
+        }
+
+        function notesBuildAudioTab() {
+            var body = document.getElementById('notes-modal-body');
+            if (!body) return;
+            if (notesAudioURL) {
+                body.innerHTML = '<div class="notes-rec-area"><div style="font-size:0.8rem;color:var(--primary)">✅ تم التسجيل</div><audio class="notes-audio-el" controls src="'+notesAudioURL+'"></audio><button onclick="notesAudioURL=null;notesAudioBlob=null;notesBuildAudioTab()" style="background:none;border:1px solid red;color:red;padding:6px 16px;border-radius:10px;cursor:pointer;font-family:var(--app-font)">🗑️ إعادة التسجيل</button></div>';
+            } else {
+                body.innerHTML = '<div class="notes-rec-area"><button class="notes-rec-btn" id="notes-rec-btn" onclick="notesToggleRec()">🎙️</button><div class="notes-rec-status" id="notes-rec-status">اضغط للتسجيل</div></div>';
+            }
+        }
+
+        function notesToggleRec() {
+            if (!notesMediaRecorder || notesMediaRecorder.state === 'inactive') {
+                navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream) {
+                    notesAudioChunks = [];
+                    notesMediaRecorder = new MediaRecorder(stream);
+                    notesMediaRecorder.ondataavailable = function(e){ notesAudioChunks.push(e.data); };
+                    notesMediaRecorder.onstop = function(){
+                        notesAudioBlob = new Blob(notesAudioChunks,{type:'audio/webm'});
+                        var reader = new FileReader();
+                        reader.onload = function(ev){ notesAudioURL = ev.target.result; notesBuildAudioTab(); };
+                        reader.readAsDataURL(notesAudioBlob);
+                        stream.getTracks().forEach(function(t){ t.stop(); });
+                    };
+                    notesMediaRecorder.start();
+                    var btn=document.getElementById('notes-rec-btn'), st=document.getElementById('notes-rec-status');
+                    if(btn) btn.classList.add('rec');
+                    if(st){ var secs=0; st.innerText='جاري التسجيل... 0ث'; notesRecInterval=setInterval(function(){ secs++; var el=document.getElementById('notes-rec-status'); if(el) el.innerText='جاري التسجيل... '+secs+'ث'; },1000); }
+                }).catch(function(){ alert('الميكروفون مش متاح'); });
+            } else if (notesMediaRecorder.state==='recording') {
+                clearInterval(notesRecInterval);
+                notesMediaRecorder.stop();
+            }
+        }
+
+        function notesSave() {
+            var title = (document.getElementById('note-title-in').value||'').trim() || 'ملاحظة';
+            var tag   = (document.getElementById('note-tag-in').value||'').trim();
+            // اختار القسم من الـ select لو موجود، وإلا خد القسم المفلتر حالياً تلقائياً
+            var sel = document.getElementById('note-cat-in');
+            var cat = (sel ? sel.value : '') || '';
+            if (!cat && notesFilter.indexOf('cat:') === 0) {
+                cat = notesFilter.slice(4);
+            }
+            var now   = new Date();
+            var dateStr = now.toLocaleDateString('ar-EG')+' '+now.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+            if (notesCurrentTab==='audio' && !notesAudioURL){ alert('سجّل ملاحظة صوتية الأول'); return; }
+            if (notesEditId) {
+                var n = notesData.find(function(x){ return x.id===notesEditId; });
+                if(n){
+                    n.title=title; n.tag=tag; n.category=cat; n.color=notesSelectedColor; n.date=dateStr;
+                    if(notesCurrentTab==='text'){ n.type='text'; var ta=document.getElementById('notes-textarea-el'); if(ta) n.content=ta.value; }
+                    else { n.type='audio'; n.audio=notesAudioURL; }
+                }
+            } else {
+                var note={id:'note-'+Date.now(), title:title, tag:tag, category:cat, color:notesSelectedColor, date:dateStr, pinned:false, type:notesCurrentTab};
+                if(notesCurrentTab==='text'){ var ta2=document.getElementById('notes-textarea-el'); note.content=ta2?ta2.value:''; }
+                else { note.audio=notesAudioURL; }
+                notesData.unshift(note);
+            }
+            notesSave_storage();
+            notesCloseModal();
+            notesRender();
+        }
+
+        function notesSetFilter(f, el) {
+            notesFilter = f;
+            document.querySelectorAll('.notes-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+            if(el) el.classList.add('active');
+            notesRender();
+        }
+
+        function notesTogglePin(id) {
+            var n = notesData.find(function(x){ return x.id===id; });
+            if(n){ n.pinned=!n.pinned; notesSave_storage(); notesRender(); }
+        }
+
+        function notesDelete(id) {
+            notesData = notesData.filter(function(x){ return x.id!==id; });
+            notesSave_storage(); notesRender();
+        }
+
+        function notesRender() {
+            var grid = document.getElementById('notes-grid');
+            var hint = document.getElementById('notes-empty');
+            var q = (document.getElementById('notes-search-in').value||'').toLowerCase();
+            grid.querySelectorAll('.note-card').forEach(function(c){ c.remove(); });
+
+            var list = notesData.filter(function(n){
+                if (notesFilter==='text'  && n.type!=='text')  return false;
+                if (notesFilter==='audio' && n.type!=='audio') return false;
+                if (notesFilter==='pin'   && !n.pinned)        return false;
+                if (notesFilter.indexOf('cat:')===0 && n.category !== notesFilter.slice(4)) return false;
+                if (q && (n.title||'').toLowerCase().indexOf(q)<0 && (n.content||'').toLowerCase().indexOf(q)<0 && (n.tag||'').toLowerCase().indexOf(q)<0) return false;
+                return true;
+            });
+            list.sort(function(a,b){ return (b.pinned?1:0)-(a.pinned?1:0); });
+
+            if (list.length===0){ if(hint) hint.style.display='block'; return; }
+            if(hint) hint.style.display='none';
+
+            list.forEach(function(n){
+                var card = document.createElement('div');
+                card.className = 'note-card' + (n.pinned?' pinned':'');
+
+                // accent bar
+                var accent = document.createElement('div');
+                accent.className = 'note-card-accent';
+                accent.style.background = n.color||'var(--primary)';
+
+                // top row: icon + title + PIN button
+                var top = document.createElement('div');
+                top.className = 'note-card-top';
+                top.innerHTML = '<span class="note-type-icon">'+(n.type==='audio'?'🎙️':'📝')+'</span>'
+                    +'<span class="note-title">'+n.title+'</span>'
+                    +'<button onclick="event.stopPropagation();notesTogglePin(\''+n.id+'\')" title="تثبيت" '
+                    +'style="background:none;border:none;cursor:pointer;font-size:1rem;padding:0;opacity:'+(n.pinned?'1':'0.25')+';" >'
+                    +(n.pinned?'📌':'📌')+'</button>';
+
+                // content preview
+                var preview = document.createElement('div');
+                if(n.type==='audio'){
+                    preview.className='note-audio-bar';
+                    preview.innerHTML='<button class="note-play-btn" onclick="event.stopPropagation();notesPlayAudio(\''+n.id+'\')">▶</button><span style="font-size:0.75rem;color:#666;">ملاحظة صوتية</span>';
+                } else {
+                    preview.className='note-preview';
+                    preview.innerText=n.content||'';
+                }
+
+                // footer: date + tag/cat + delete
+                var footer=document.createElement('div');
+                footer.className='note-footer';
+                var badges='';
+                if(n.tag) badges+='<span class="note-tag-badge">'+n.tag+'</span> ';
+                if(n.category) badges+='<span class="note-tag-badge" style="background:rgba(255,255,255,0.06);color:#aaa;">🗂 '+n.category+'</span>';
+                footer.innerHTML='<span class="note-date">'+n.date+'</span>'
+                    +'<span>'+badges+'</span>'
+                    +'<button class="note-del" onclick="event.stopPropagation();notesDelete(\''+n.id+'\')">🗑️</button>';
+
+                card.appendChild(accent);
+                card.appendChild(top);
+                card.appendChild(preview);
+                card.appendChild(footer);
+                card.onclick=function(){ notesOpenModal(n.id); };
+                grid.appendChild(card);
+            });
+        }
+
+        function notesPlayAudio(id){
+            var n=notesData.find(function(x){ return x.id===id; });
+            if(!n||!n.audio) return;
+            new Audio(n.audio).play();
+        }
+
+        document.addEventListener('DOMContentLoaded', function(){
+            notesLoad_storage();
+            notesRebuildFilterRow();
+            notesRender();
+            notesBuildColorRow();
+        });
+        /* =========================== */
+        var notesEditId = null;
+        var notesCurrentTab = 'text';
+        var notesMediaRecorder = null;
+        var notesAudioChunks = [];
+        var notesAudioBlob = null;
+        var notesAudioURL = null;
+        var notesColors = ['#00ffcc','#ff2d78','#00cfff','#bf5fff','#ff9500','#39ff14','#fff','#ff6b6b'];
+        var notesSelectedColor = '#00ffcc';
+
+        function notesSave_storage() { localStorage.setItem('tromadoro_notes', JSON.stringify(notesData)); }
+        function notesLoad_storage() { var r = localStorage.getItem('tromadoro_notes'); if(r) notesData = JSON.parse(r); }
+
+        function notesOpenModal(editId) {
+            notesEditId = editId || null;
+            notesAudioBlob = null; notesAudioURL = null; notesAudioChunks = [];
+            document.getElementById('notes-modal').classList.add('open');
+            document.getElementById('note-title-in').value = '';
+            document.getElementById('note-tag-in').value = '';
+            notesSelectedColor = '#00ffcc';
+            notesCurrentTab = 'text';
+            notesBuildColorRow();
+            notesSwitchTab('text', document.querySelector('.notes-modal-tab'));
+            if (editId) {
+                var n = notesData.find(function(x){ return x.id === editId; });
+                if (!n) return;
+                document.getElementById('note-title-in').value = n.title;
+                document.getElementById('note-tag-in').value = n.tag || '';
+                notesSelectedColor = n.color || '#00ffcc';
+                notesBuildColorRow();
+                if (n.type === 'audio') {
+                    notesSwitchTab('audio', document.querySelectorAll('.notes-modal-tab')[1]);
+                    notesAudioURL = n.audio;
+                    notesBuildAudioTab();
+                } else {
+                    document.getElementById('notes-textarea-el').value = n.content || '';
+                }
+            }
+        }
+
+        function notesCloseModal() {
+            document.getElementById('notes-modal').classList.remove('open');
+            if (notesMediaRecorder && notesMediaRecorder.state === 'recording') notesMediaRecorder.stop();
+        }
+
+        function notesBuildColorRow() {
+            var row = document.getElementById('note-color-row');
+            row.innerHTML = '';
+            notesColors.forEach(function(c) {
+                var d = document.createElement('div');
+                d.className = 'nc-dot' + (c === notesSelectedColor ? ' sel' : '');
+                d.style.background = c;
+                d.onclick = function() { notesSelectedColor = c; notesBuildColorRow(); };
+                row.appendChild(d);
+            });
+        }
+
+        function notesSwitchTab(tab, el) {
+            notesCurrentTab = tab;
+            document.querySelectorAll('.notes-modal-tab').forEach(function(b){ b.classList.remove('active'); });
+            if (el) el.classList.add('active');
+            var body = document.getElementById('notes-modal-body');
+            if (tab === 'text') {
+                body.innerHTML = '<textarea class="notes-textarea" id="notes-textarea-el" placeholder="اكتب ملاحظتك هنا...&#10;&#10;يمكنك كتابة معادلات، أفكار، خطوات، أي شيء..."></textarea>';
+            } else {
+                notesBuildAudioTab();
+            }
+        }
+
+        function notesBuildAudioTab() {
+            var body = document.getElementById('notes-modal-body');
+            if (notesAudioURL) {
+                body.innerHTML = '<div class="notes-rec-area"><div style="font-size:0.8rem;color:var(--primary);">✅ تم التسجيل</div><audio class="notes-audio-el" controls src="' + notesAudioURL + '"></audio><button onclick="notesAudioURL=null;notesAudioBlob=null;notesBuildAudioTab()" style="background:none;border:1px solid red;color:red;padding:6px 16px;border-radius:10px;cursor:pointer;font-family:var(--app-font);">🗑️ حذف وإعادة التسجيل</button></div>';
+            } else {
+                body.innerHTML = '<div class="notes-rec-area"><button class="notes-rec-btn" id="notes-rec-btn" onclick="notesToggleRec()">🎙️</button><div class="notes-rec-status" id="notes-rec-status">اضغط للتسجيل</div></div>';
+            }
+        }
+
+        function notesToggleRec() {
+            if (!notesMediaRecorder || notesMediaRecorder.state === 'inactive') {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    alert('المتصفح ده مش بيدعم التسجيل الصوتي. جرب Chrome أو Safari.');
+                    return;
+                }
+                navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream) {
+                    notesAudioChunks = [];
+                    // اختار الصيغة المناسبة للمتصفح
+                    var mimeType = 'audio/webm';
+                    if (!MediaRecorder.isTypeSupported('audio/webm')) {
+                        mimeType = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : '';
+                    }
+                    notesMediaRecorder = mimeType ? new MediaRecorder(stream, {mimeType: mimeType}) : new MediaRecorder(stream);
+                    notesMediaRecorder.ondataavailable = function(e) { if(e.data && e.data.size > 0) notesAudioChunks.push(e.data); };
+                    notesMediaRecorder.onstop = function() {
+                        var blobType = notesMediaRecorder.mimeType || 'audio/webm';
+                        notesAudioBlob = new Blob(notesAudioChunks, {type: blobType});
+                        var reader = new FileReader();
+                        reader.onload = function(ev) { notesAudioURL = ev.target.result; notesBuildAudioTab(); };
+                        reader.readAsDataURL(notesAudioBlob);
+                        stream.getTracks().forEach(function(t){ t.stop(); });
+                    };
+                    notesMediaRecorder.start();
+                    var btn = document.getElementById('notes-rec-btn');
+                    var st = document.getElementById('notes-rec-status');
+                    if(btn) btn.classList.add('rec');
+                    if(st) { var secs=0; st.innerText='جاري التسجيل... 0ث'; notesRecInterval = setInterval(function(){ secs++; var el=document.getElementById('notes-rec-status'); if(el) el.innerText='جاري التسجيل... '+secs+'ث'; },1000); }
+                }).catch(function(err) {
+                    if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                        alert('محتاج تسمح للمتصفح بالوصول للميكروفون.\nروح الإعدادات وافتح صلاحية الميكروفون.');
+                    } else if (err.name === 'NotFoundError') {
+                        alert('مش لاقي ميكروفون على الجهاز ده.');
+                    } else {
+                        alert('مشكلة في الميكروفون: ' + (err.message || err.name));
+                    }
+                });
+            } else if (notesMediaRecorder.state === 'recording') {
+                clearInterval(notesRecInterval);
+                notesMediaRecorder.stop();
+            }
+        }
+
+        /* === SIDE DRAWER JS === */
+        (function() {
+            var drawerPages = [
+                { id: 'muslim-page', label: 'مسلم', svg: '<path d="M12 2C10 2 8 3.5 8 5.5c0 1 .4 2 1 2.7V9H7l-1 2h1v9h8v-9h1l-1-2h-2V8.2c.6-.7 1-1.7 1-2.7C14 3.5 14 2 12 2z"/><path d="M3 11h2v9H3zM19 11h2v9h-2z"/><line x1="3" y1="20" x2="21" y2="20"/>' },
+                { id: 'home', label: 'التايمر', svg: '<circle cx="12" cy="13" r="8"/><polyline points="12 9 12 13 15 15"/><path d="M9 2h6M12 2v3"/>' },
+                { id: 'lectures-page', label: 'المحاضرات', svg: '<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>' },
+                { id: 'tasks', label: 'المهام', svg: '<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>' },
+                { id: 'weekly-street-page', label: 'الجدول الأسبوعي', svg: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>' },
+                { id: 'time-block', label: 'تقسيم الوقت', svg: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>' },
+                { id: 'schedule', label: 'الجدول', svg: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>' },
+                { id: 'exam-planning-page', label: 'Deadlines', svg: '<path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>' },
+                { id: 'mindmap-page', label: 'خارطة الذهن', svg: '<circle cx="12" cy="12" r="3"/><circle cx="3" cy="6" r="2"/><circle cx="21" cy="6" r="2"/><circle cx="3" cy="18" r="2"/><circle cx="21" cy="18" r="2"/><line x1="5" y1="6" x2="9" y2="11"/><line x1="19" y1="6" x2="15" y2="11"/><line x1="5" y1="18" x2="9" y2="13"/><line x1="19" y1="18" x2="15" y2="13"/>' },
+                { id: 'notes-page', label: 'الملاحظات', svg: '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>' }
+            ];
+
+            var drawer = document.getElementById('side-drawer');
+
+            drawerPages.forEach(function(p, i) {
+                if (i === 4 || i === 7) {
+                    var div = document.createElement('div');
+                    div.className = 'drawer-divider';
+                    drawer.appendChild(div);
+                }
+                var item = document.createElement('div');
+                item.className = 'drawer-nav-item';
+                item.id = 'drawer-item-' + p.id;
+                item.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' + p.svg + '</svg><span class="drawer-nav-label">' + p.label + '</span>';
+                item.addEventListener('click', function() {
+                    var navItems = document.querySelectorAll('.nav-item');
+                    navItems.forEach(function(ni) {
+                        var oc = ni.getAttribute('onclick') || '';
+                        if (oc.indexOf("'" + p.id + "'") !== -1) ni.click();
+                    });
+                    syncDrawerActive(p.id);
+                    closeDrawer();
+                });
+                drawer.appendChild(item);
+            });
+
+            function syncDrawerActive(id) {
+                document.querySelectorAll('.drawer-nav-item').forEach(function(d){ d.classList.remove('active'); });
+                var el = document.getElementById('drawer-item-' + id);
+                if (el) el.classList.add('active');
+            }
+
+            // Wrap showP to sync drawer active state
+            window.addEventListener('load', function() {
+                var origShowP = window.showP;
+                if (origShowP) {
+                    window.showP = function(id, el) {
+                        origShowP(id, el);
+                        syncDrawerActive(id);
+                        localStorage.setItem('tromadoro_last_page', id);
+                    };
+                }
+                // Restore last visited page
+                var lastPage = localStorage.getItem('tromadoro_last_page');
+                if (lastPage && document.getElementById(lastPage)) {
+                    var matchingNav = Array.from(document.querySelectorAll('.nav-item')).find(function(ni) {
+                        return (ni.getAttribute('onclick') || '').indexOf("'" + lastPage + "'") !== -1;
+                    });
+                    if (matchingNav) matchingNav.click();
+                }
+                // Set initial active
+                var firstActive = document.querySelector('.nav-item.active');
+                if (firstActive) {
+                    var oc = firstActive.getAttribute('onclick') || '';
+                    var match = oc.match(/'([^']+)'/);
+                    if (match) syncDrawerActive(match[1]);
+                }
+            });
+
+            window.toggleDrawer = function() {
+                var dr = document.getElementById('side-drawer');
+                var ov = document.getElementById('side-drawer-overlay');
+                var tab = document.getElementById('drawer-pull-tab');
+                var isOpen = dr.classList.toggle('open');
+                ov.classList.toggle('open', isOpen);
+                tab.classList.toggle('open', isOpen);
+                tab.querySelector('svg').innerHTML = isOpen
+                    ? '<polyline points="2 1 7 8 2 15"/>'
+                    : '<polyline points="7 1 2 8 7 15"/>';
+            };
+
+            window.closeDrawer = function() {
+                document.getElementById('side-drawer').classList.remove('open');
+                document.getElementById('side-drawer-overlay').classList.remove('open');
+                var tab = document.getElementById('drawer-pull-tab');
+                tab.classList.remove('open');
+                tab.querySelector('svg').innerHTML = '<polyline points="7 1 2 8 7 15"/>';
+            };
+
+            // Swipe gesture support
+            var _swipeStartX = null, _swipeStartY = null;
+            document.addEventListener('touchstart', function(e) {
+                _swipeStartX = e.touches[0].clientX;
+                _swipeStartY = e.touches[0].clientY;
+            }, { passive: true });
+            document.addEventListener('touchend', function(e) {
+                if (_swipeStartX === null) return;
+                var dx = e.changedTouches[0].clientX - _swipeStartX;
+                var dy = e.changedTouches[0].clientY - _swipeStartY;
+                if (Math.abs(dy) > Math.abs(dx) * 1.5) { _swipeStartX = null; return; }
+                var isOpen = document.getElementById('side-drawer').classList.contains('open');
+                if (!isOpen && _swipeStartX > window.innerWidth - 50 && dx < -35) {
+                    toggleDrawer();
+                } else if (isOpen && dx > 60) {
+                    closeDrawer();
+                }
+                _swipeStartX = null;
+            }, { passive: true });
+        })();
+        /* ===================== */
     </script>
 </body>
 </html>
